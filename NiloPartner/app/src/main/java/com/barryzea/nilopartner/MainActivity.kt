@@ -2,6 +2,8 @@ package com.barryzea.nilopartner
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,7 +16,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bind:ActivityMainBinding
     private lateinit var firebaseAuth:FirebaseAuth
     private lateinit var authStateListener:FirebaseAuth.AuthStateListener
-
+    private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        var response=IdpResponse.fromResultIntent(it.data)
+        if(it.resultCode== RESULT_OK){
+            val user=FirebaseAuth.getInstance().currentUser
+            if(user !=null){
+                Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind= ActivityMainBinding.inflate(layoutInflater)
@@ -34,15 +44,7 @@ class MainActivity : AppCompatActivity() {
             }?:run{
                 val providers= arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
 
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-                    var response=IdpResponse.fromResultIntent(it.data)
-                    if(it.resultCode== RESULT_OK){
-                        val user=FirebaseAuth.getInstance().currentUser
-                        if(user !=null){
-                            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }.launch(AuthUI.getInstance()
+                resultLauncher.launch(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
                     .build())
@@ -52,6 +54,23 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_logout, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.itemLogOut->{
+                AuthUI.getInstance().signOut(this)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Sesión Cerrada", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+
+    }
     override fun onResume() {
         super.onResume()
         firebaseAuth.addAuthStateListener(authStateListener)
