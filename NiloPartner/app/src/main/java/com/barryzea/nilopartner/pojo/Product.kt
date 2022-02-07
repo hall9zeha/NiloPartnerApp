@@ -1,10 +1,10 @@
 package com.barryzea.nilopartner.pojo
 
 data class Product(
-    var id:String?,
-    var name:String?,
-    var description:String?,
-    var imgUrl:String?,
+    var id:String?="",
+    var name:String?="",
+    var description:String?="",
+    var imgUrl:String?="",
     var quantity:Int=0,
     var price:Double=0.0
 

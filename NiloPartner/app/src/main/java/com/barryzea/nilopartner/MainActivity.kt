@@ -2,6 +2,7 @@ package com.barryzea.nilopartner
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,7 +19,10 @@ import com.barryzea.nilopartner.pojo.Product
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnProductListener {
     private lateinit var bind:ActivityMainBinding
@@ -46,7 +50,7 @@ class MainActivity : AppCompatActivity(), OnProductListener {
                         Toast.makeText(this, "No hay red", Toast.LENGTH_SHORT).show()
                     }
                     else{
-                        Toast.makeText(this, "Código de error: ${it.errorCode}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Código de error: ${it.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -58,22 +62,28 @@ class MainActivity : AppCompatActivity(), OnProductListener {
         setContentView(bind.root)
         configAuth()
         configRecyclerView()
+        configFirestore()
 
     }
     private fun configRecyclerView(){
-        adapter= ProductAdapter(mutableListOf(),this)
+        adapter = ProductAdapter(mutableListOf(), this)
         bind.rvProducts.apply {
-            layoutManager=GridLayoutManager(this@MainActivity,3
-                ,GridLayoutManager.HORIZONTAL,false)
-            setHasFixedSize(true)
-            adapter=this@MainActivity.adapter
-        }
+            layoutManager = GridLayoutManager(
+                this@MainActivity, 3, GridLayoutManager.HORIZONTAL, false
+            )
 
-        (1..20).forEach {
-            val product=Product(it.toString(),"Producto $it", "Este producto es el $it",
-                "", it, it * 1.1)
-            adapter.add(product)
+            adapter = this@MainActivity.adapter
         }
+        //No poner setHasFixed in true cuando haces llamadas a datos cambiantes desde la nube o cualquier otros
+        //dato dinámico
+        /*
+        * Solamente hardcodeo de código para probar el funcionamiento
+        * */
+        /*  (1..20).forEach {
+              val product=Product(it.toString(),"Producto $it", "Este producto es el $it",
+                  "", it, it * 1.1)
+              adapter.add(product)
+          }*/
     }
     private fun configAuth() {
         //Implementamos autenticacion con FirebaseUi la api que recomienda firebase contiene todos los
@@ -127,18 +137,36 @@ class MainActivity : AppCompatActivity(), OnProductListener {
     override fun onResume() {
         super.onResume()
         firebaseAuth.addAuthStateListener(authStateListener)
+
     }
 
     override fun onPause() {
         super.onPause()
         firebaseAuth.removeAuthStateListener(authStateListener)
     }
+    private fun configFirestore(){
+        val db=FirebaseFirestore.getInstance()
 
+            db.collection("products")
+                .get()
+                .addOnSuccessListener { snapshots ->
+                    for (document in snapshots) {
+                        val product = document.toObject(Product::class.java)
+
+                        adapter.add(product)
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Error al consultar los datos", Toast.LENGTH_SHORT).show()
+                }
+
+
+    }
     override fun onClick(product: Product) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onLongClick(product: Product) {
-        TODO("Not yet implemented")
+
     }
 }

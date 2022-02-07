@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Nilo Partner</string>
     <string name="product_create">Crear</string>
+    <string name="product_name">Nombre del producto</string>
+    <string name="description">Descripción</string>
+    <string name="quantity">Cantidad</string>
+    <string name="price">Precio</string>
 </resources>
