@@ -9,6 +9,10 @@ import com.barryzea.nilopartner.R
 import com.barryzea.nilopartner.databinding.ItemProductBinding
 import com.barryzea.nilopartner.interfaces.OnProductListener
 import com.barryzea.nilopartner.pojo.Product
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import java.security.AllPermission
 
 class ProductAdapter (private val products:MutableList<Product>, private val listener:OnProductListener):RecyclerView.Adapter<ProductAdapter.ViewHolder>(){
     private lateinit var context: Context
@@ -24,6 +28,15 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
         holder.bind.tvName.text=product.name
         holder.bind.tvPrice.text=product.price.toString()
         holder.bind.tvQuantity.text=product.quantity.toString()
+
+        val requestOptions =RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .centerCrop()
+
+        Glide.with(context)
+            .load(product.imgUrl)
+            .apply(requestOptions)
+            .into(holder.bind.imgProduct)
 
     }
 

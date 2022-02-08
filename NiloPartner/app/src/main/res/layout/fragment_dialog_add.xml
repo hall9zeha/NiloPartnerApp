@@ -76,5 +76,25 @@
             android:id="@+id/etPrice"
             android:inputType="numberDecimal"/>
     </com.google.android.material.textfield.TextInputLayout>
-
+<ImageView
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:id="@+id/imgProductPreview"
+    android:background="@color/gray_100"
+    android:layout_marginTop="@dimen/common_padding_min"
+    android:layout_marginEnd="@dimen/common_padding_min"
+    app:layout_constraintEnd_toEndOf="@id/guideline"
+    app:layout_constraintTop_toBottomOf="@id/tilQuantity"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintDimensionRatio="16:9"/>
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/ibProduct"
+        android:src="@drawable/ic_image_serach"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="@id/imgProductPreview"
+        app:layout_constraintEnd_toEndOf="@id/imgProductPreview"
+        app:layout_constraintTop_toTopOf="@id/imgProductPreview"
+        app:layout_constraintBottom_toBottomOf="@id/imgProductPreview"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
