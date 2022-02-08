@@ -1,7 +1,9 @@
 package com.barryzea.nilopartner.pojo
 
+import com.google.firebase.firestore.Exclude
+
 data class Product(
-    var id:String?="",
+    @Exclude @set:Exclude @get:Exclude var id:String?="",
     var name:String?="",
     var description:String?="",
     var imgUrl:String?="",

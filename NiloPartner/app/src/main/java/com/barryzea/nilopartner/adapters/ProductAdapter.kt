@@ -32,6 +32,23 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
             products.add(product)
             notifyItemInserted(products.size-1)
         }
+        else{
+            update(product)
+        }
+    }
+    fun update(product:Product){
+        val index=products.indexOf(product)
+        if(index !=-1){
+            products[index] = product
+            notifyItemChanged(index)
+        }
+    }
+    fun delete(product:Product){
+        val index=products.indexOf(product)
+        if(index !=-1){
+            products.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
     override fun getItemCount(): Int = products.let{products.size}
 

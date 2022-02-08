@@ -13,7 +13,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryzea.nilopartner.adapters.ProductAdapter
+import com.barryzea.nilopartner.commons.Constants.COLLECTION_PRODUCT
 import com.barryzea.nilopartner.databinding.ActivityMainBinding
+import com.barryzea.nilopartner.dialogs.AddDialogFragment
+import com.barryzea.nilopartner.interfaces.MainAux
 import com.barryzea.nilopartner.interfaces.OnProductListener
 import com.barryzea.nilopartner.pojo.Product
 import com.firebase.ui.auth.AuthUI
@@ -21,14 +24,18 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import java.io.IOException
 
-class MainActivity : AppCompatActivity(), OnProductListener {
+class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var bind:ActivityMainBinding
     private lateinit var firebaseAuth:FirebaseAuth
     private lateinit var authStateListener:FirebaseAuth.AuthStateListener
     private lateinit var adapter:ProductAdapter
+    private lateinit var listenerFirestore:ListenerRegistration
+    private lateinit var querySnapshot: EventListener<QuerySnapshot>
+    private var productSelected:Product?=null
+
     private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
         var response=IdpResponse.fromResultIntent(it.data)
         if(it.resultCode== RESULT_OK){
@@ -36,6 +43,7 @@ class MainActivity : AppCompatActivity(), OnProductListener {
             if(user !=null){
                 bind.nsvProducts.visibility= View.VISIBLE
                 bind.lnLoading.visibility=View.GONE
+                bind.extFabCreate.show()
                 Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
             }
         }
@@ -62,7 +70,9 @@ class MainActivity : AppCompatActivity(), OnProductListener {
         setContentView(bind.root)
         configAuth()
         configRecyclerView()
-        configFirestore()
+        //configFirestore()
+        //configFirestoreRealTime()
+        configButtons()
 
     }
     private fun configRecyclerView(){
@@ -71,7 +81,6 @@ class MainActivity : AppCompatActivity(), OnProductListener {
             layoutManager = GridLayoutManager(
                 this@MainActivity, 3, GridLayoutManager.HORIZONTAL, false
             )
-
             adapter = this@MainActivity.adapter
         }
         //No poner setHasFixed in true cuando haces llamadas a datos cambiantes desde la nube o cualquier otros
@@ -95,6 +104,7 @@ class MainActivity : AppCompatActivity(), OnProductListener {
                 supportActionBar?.title= auth.currentUser?.displayName
                 bind.nsvProducts.visibility= View.VISIBLE
                 bind.lnLoading.visibility=View.GONE
+                bind.extFabCreate.show()
             }?:run{
                 val providers= arrayListOf(
                     AuthUI.IdpConfig.EmailBuilder().build(),
@@ -126,6 +136,7 @@ class MainActivity : AppCompatActivity(), OnProductListener {
                     .addOnCompleteListener {
                         if(it.isSuccessful){
                             bind.nsvProducts.visibility=View.GONE
+                            bind.extFabCreate.hide()
                             bind.lnLoading.visibility=View.VISIBLE
                         }
                     }
@@ -137,17 +148,20 @@ class MainActivity : AppCompatActivity(), OnProductListener {
     override fun onResume() {
         super.onResume()
         firebaseAuth.addAuthStateListener(authStateListener)
+        configFirestoreRealTime()
 
     }
 
     override fun onPause() {
         super.onPause()
         firebaseAuth.removeAuthStateListener(authStateListener)
+        listenerFirestore.remove()
     }
     private fun configFirestore(){
         val db=FirebaseFirestore.getInstance()
 
-            db.collection("products")
+
+            db.collection(COLLECTION_PRODUCT)
                 .get()
                 .addOnSuccessListener { snapshots ->
                     for (document in snapshots) {
@@ -160,13 +174,54 @@ class MainActivity : AppCompatActivity(), OnProductListener {
                     Toast.makeText(this, "Error al consultar los datos", Toast.LENGTH_SHORT).show()
                 }
 
+    }
+    private fun configFirestoreRealTime(){
+        val db=FirebaseFirestore.getInstance()
+        val dbRef=db.collection(COLLECTION_PRODUCT)
+
+        querySnapshot= EventListener<QuerySnapshot> { snapshots, error ->
+            for(snapshot in snapshots!!.documentChanges)
+            {
+
+                var product:Product=snapshot.document.toObject(Product::class.java)!!
+                product.id=snapshot.document.id
+                when(snapshot.type){
+                    DocumentChange.Type.ADDED->{adapter.add(product)}
+                    DocumentChange.Type.MODIFIED->{adapter.update(product)}
+                    DocumentChange.Type.REMOVED->{adapter.delete(product)}
+                }
+
+            }
+        }
+        listenerFirestore=dbRef.addSnapshotListener(querySnapshot)
+
+
 
     }
+    private fun configButtons(){
+        bind.extFabCreate.setOnClickListener {
+        productSelected=null
+            AddDialogFragment().show(supportFragmentManager, AddDialogFragment::class.java.simpleName)
+        }
+    }
     override fun onClick(product: Product) {
-
+        productSelected=product
+        AddDialogFragment().show(supportFragmentManager, AddDialogFragment::class.java.simpleName)
     }
 
     override fun onLongClick(product: Product) {
 
+        val db=FirebaseFirestore.getInstance()
+        val dbRef=db.collection(COLLECTION_PRODUCT)
+        product.id?.let{
+            dbRef.document(it)
+                .delete()
+                .addOnFailureListener {
+                    Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                }
+        }
+       
     }
+
+    override fun getProductSelected(): Product? =productSelected
 }

@@ -65,6 +65,7 @@
         android:hint="@string/price"
         android:layout_marginTop="@dimen/common_padding_min"
         android:layout_marginStart="@dimen/common_padding_min"
+        app:prefixText="S/"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilDescription"
@@ -73,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/etPrice"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
