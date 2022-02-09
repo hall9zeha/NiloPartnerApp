@@ -9,12 +9,14 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.barryzea.nilopartner.EventPost
+import com.barryzea.nilopartner.R
 import com.barryzea.nilopartner.commons.Constants
 import com.barryzea.nilopartner.commons.Constants.COLLECTION_PRODUCT
 import com.barryzea.nilopartner.commons.Constants.PRODUCT_IMAGE
@@ -38,7 +40,16 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
     private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if(it.resultCode==Activity.RESULT_OK){
             photoSelectedUri=it.data?.data
-            bind?.imgProductPreview?.setImageURI(photoSelectedUri)
+            //bind?.imgProductPreview?.setImageURI(photoSelectedUri)
+            bind?.let{bind->
+                Glide.with(this)
+                    .load(photoSelectedUri)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.ic_image_search)
+                    .error(R.drawable.ic_broken_image)
+                    .centerCrop()
+                    .into(bind.imgProductPreview)
+            }
         }
     }
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -69,7 +80,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
 
             positiveButton?.setOnClickListener {
                 enableUI(false)
-                uploadImage() { eventPost ->
+                uploadImage(product?.id) { eventPost ->
                     if (eventPost.isSuccess == true) {
                         bind?.let {
                             if (product == null) {
@@ -87,7 +98,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                                     description = it.etDescription.text.toString()
                                     quantity = it.etQuantity.text.toString().toInt()
                                     price = it.etPrice.text.toString().toDouble()
-                                    imgUrl = product?.imgUrl
+                                    imgUrl = eventPost.photoUrl
                                     updateProduct(this)
                                 }
                             }
@@ -107,7 +118,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             bind?.etDescription?.setText(product.description)
             bind?.etPrice?.setText(product.price.toString())
             bind?.etQuantity?.setText(product.quantity.toString())
-            Glide.with(requireActivity())
+            Glide.with(this)
                 .load(product.imgUrl)
                 .apply(RequestOptions()
                     .centerCrop()
@@ -128,16 +139,24 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
         resultLauncher.launch(intent)
     }
 
-    private fun uploadImage(callback:(EventPost)->Unit){
+    private fun uploadImage(productId:String?, callback:(EventPost)->Unit){
 
         val eventPost=EventPost()
-        eventPost.documentId=FirebaseFirestore.getInstance().collection(Constants.COLLECTION_PRODUCT)
+        eventPost.documentId=productId ?: FirebaseFirestore.getInstance().collection(Constants.COLLECTION_PRODUCT)
             .document().id
         val storageRef=FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE)
         photoSelectedUri?.let{uri->
             bind?.let{bind->
+                bind.pbUpload.visibility= View.VISIBLE
                 val photoRef=storageRef.child(eventPost.documentId!!)
                 photoRef.putFile(uri)
+                    .addOnProgressListener {
+                        val progress=(100 * it.bytesTransferred / it.totalByteCount ).toInt()
+                        it.run {
+                            bind.pbUpload.progress=progress
+                            bind.tvProgress.text=String.format( "%s%%",progress)
+                        }
+                    }
                     .addOnSuccessListener {
                         it.storage.downloadUrl.addOnSuccessListener {downloadUrl->
 
@@ -149,6 +168,9 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                     }
                     .addOnFailureListener{
                         eventPost.isSuccess=false
+                        enableUI(true)
+                        Toast.makeText(requireActivity(), "Error al subir imagen", Toast.LENGTH_SHORT).show()
+                        bind?.pbUpload?.visibility=View.GONE
                         callback(eventPost)
                     }
 
@@ -165,12 +187,13 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             .addOnSuccessListener {
                 Toast.makeText(context, "producto agregado", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener {
-                Toast.makeText(context, "error al insertar", Toast.LENGTH_SHORT).show()
-            }
             .addOnCompleteListener {
                 enableUI(true)
+                bind?.pbUpload?.visibility=View.INVISIBLE
                 dismiss()
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "error al insertar", Toast.LENGTH_SHORT).show()
             }
     }
     private fun updateProduct(product:Product){
@@ -187,6 +210,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                 }
                 .addOnCompleteListener {
                     enableUI(true)
+                    bind?.pbUpload?.visibility=View.INVISIBLE
                     dismiss()
                 }
         }
