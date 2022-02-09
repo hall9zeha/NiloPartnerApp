@@ -1,34 +1,31 @@
-package com.barryzea.nilopartner
+package com.barryzea.niloclient
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.GridLayout
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.barryzea.nilopartner.adapters.ProductAdapter
-import com.barryzea.nilopartner.commons.Constants.COLLECTION_PRODUCT
-import com.barryzea.nilopartner.databinding.ActivityMainBinding
-import com.barryzea.nilopartner.dialogs.AddDialogFragment
-import com.barryzea.nilopartner.interfaces.MainAux
-import com.barryzea.nilopartner.interfaces.OnProductListener
-import com.barryzea.nilopartner.pojo.Product
+import com.barryzea.niloclient.adapters.ProductAdapter
+import com.barryzea.niloclient.cart.CartFragment
+import com.barryzea.niloclient.commons.Constants.COLLECTION_PRODUCT
+import com.barryzea.niloclient.databinding.ActivityMainBinding
+
+import com.barryzea.niloclient.interfaces.MainAux
+import com.barryzea.niloclient.interfaces.OnProductListener
+import com.barryzea.niloclient.pojo.Product
+
+
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
-    private lateinit var bind:ActivityMainBinding
+    private lateinit var bind: ActivityMainBinding
     private lateinit var firebaseAuth:FirebaseAuth
     private lateinit var authStateListener:FirebaseAuth.AuthStateListener
     private lateinit var adapter:ProductAdapter
@@ -43,7 +40,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             if(user !=null){
                 bind.nsvProducts.visibility= View.VISIBLE
                 bind.lnLoading.visibility=View.GONE
-                bind.extFabCreate.show()
+
                 Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
             }
         }
@@ -104,7 +101,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 supportActionBar?.title= auth.currentUser?.displayName
                 bind.nsvProducts.visibility= View.VISIBLE
                 bind.lnLoading.visibility=View.GONE
-                bind.extFabCreate.show()
+
             }?:run{
                 val providers= arrayListOf(
                     AuthUI.IdpConfig.EmailBuilder().build(),
@@ -136,7 +133,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     .addOnCompleteListener {
                         if(it.isSuccessful){
                             bind.nsvProducts.visibility=View.GONE
-                            bind.extFabCreate.hide()
+
                             bind.lnLoading.visibility=View.VISIBLE
                         }
                     }
@@ -199,29 +196,16 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
     }
     private fun configButtons(){
-        bind.extFabCreate.setOnClickListener {
-        productSelected=null
-            AddDialogFragment().show(supportFragmentManager, AddDialogFragment::class.java.simpleName)
+        bind.btnViewCar.setOnClickListener {
+            val fragment=CartFragment()
+            fragment.show(supportFragmentManager.beginTransaction(), CartFragment::class.java.simpleName)
         }
     }
     override fun onClick(product: Product) {
         productSelected=product
-        AddDialogFragment().show(supportFragmentManager, AddDialogFragment::class.java.simpleName)
+
     }
 
-    override fun onLongClick(product: Product) {
-
-        val db=FirebaseFirestore.getInstance()
-        val dbRef=db.collection(COLLECTION_PRODUCT)
-        product.id?.let{
-            dbRef.document(it)
-                .delete()
-                .addOnFailureListener {
-                    Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
-                }
-        }
-       
-    }
 
     override fun getProductSelected(): Product? =productSelected
 }

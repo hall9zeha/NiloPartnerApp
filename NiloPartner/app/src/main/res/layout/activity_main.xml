@@ -5,15 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="0dp"
+        android:layout_height="@dimen/product_preview_card_height"
+        android:id="@+id/tvTotal"
+        android:text="@string/car_empty"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:gravity="center_vertical"
+        android:layout_marginStart="@dimen/common_padding_default"
+        android:layout_marginEnd="@dimen/common_padding_min"
+        app:layout_constraintEnd_toStartOf="@id/btnViewCar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnViewCar"
+        android:text="@string/view_car"
+        android:layout_marginEnd="@dimen/common_padding_default"
+        android:layout_marginStart="@dimen/common_padding_min"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tvTotal"
+        app:layout_constraintTop_toTopOf="@id/tvTotal"/>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:id="@+id/nsvProducts"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvTotal"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -43,17 +68,6 @@
         android:layout_height="wrap_content"
         android:text="Preparando todo..."/>
 </LinearLayout>
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/extFabCreate"
-        android:text="@string/product_create"
-        app:icon="@drawable/ic_add"
-        android:layout_marginBottom="@dimen/common_padding_default"
-        android:layout_marginEnd="@dimen/common_padding_default"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+  
 
 </androidx.constraintlayout.widget.ConstraintLayout>

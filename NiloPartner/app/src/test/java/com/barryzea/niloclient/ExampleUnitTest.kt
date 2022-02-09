@@ -1,4 +1,4 @@
-package com.barryzea.nilopartner
+package com.barryzea.niloclient
 
 import org.junit.Test
 

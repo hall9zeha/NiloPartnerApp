@@ -1,4 +1,4 @@
-package com.barryzea.nilopartner.pojo
+package com.barryzea.niloclient.pojo
 
 import com.google.firebase.firestore.Exclude
 

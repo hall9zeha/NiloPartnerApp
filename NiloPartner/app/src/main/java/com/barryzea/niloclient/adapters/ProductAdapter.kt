@@ -1,18 +1,18 @@
-package com.barryzea.nilopartner.adapters
+package com.barryzea.niloclient.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.barryzea.nilopartner.R
-import com.barryzea.nilopartner.databinding.ItemProductBinding
-import com.barryzea.nilopartner.interfaces.OnProductListener
-import com.barryzea.nilopartner.pojo.Product
+import com.barryzea.niloclient.R
+import com.barryzea.niloclient.databinding.ItemProductBinding
+import com.barryzea.niloclient.interfaces.OnProductListener
+import com.barryzea.niloclient.pojo.Product
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import java.security.AllPermission
 
 class ProductAdapter (private val products:MutableList<Product>, private val listener:OnProductListener):RecyclerView.Adapter<ProductAdapter.ViewHolder>(){
     private lateinit var context: Context
@@ -70,11 +70,11 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
         * a diferencia de java que no debemos poner inner
         * */
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val bind=ItemProductBinding.bind(itemView)
+        val bind= ItemProductBinding.bind(itemView)
 
         fun setListener(product:Product){
             bind.root.setOnClickListener { listener.onClick(product) }
-            bind.root.setOnLongClickListener { listener.onLongClick(product); true }
+
         }
 
     }

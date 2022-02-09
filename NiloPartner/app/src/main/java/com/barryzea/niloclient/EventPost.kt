@@ -1,4 +1,4 @@
-package com.barryzea.nilopartner
+package com.barryzea.niloclient
 
 class EventPost() {
     var isSuccess:Boolean=false

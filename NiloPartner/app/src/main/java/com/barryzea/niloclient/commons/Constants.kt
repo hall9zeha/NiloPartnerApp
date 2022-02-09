@@ -1,4 +1,4 @@
-package com.barryzea.nilopartner.commons
+package com.barryzea.niloclient.commons
 
 object Constants {
     const val COLLECTION_PRODUCT="products"
