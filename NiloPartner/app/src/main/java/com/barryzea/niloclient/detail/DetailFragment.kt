@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.barryzea.niloclient.R
 import com.barryzea.niloclient.databinding.FragmentDetailBinding
@@ -60,8 +61,9 @@ class DetailFragment : Fragment() {
     private fun setNewQuantity(product: Product) {
             bind?.let{
                 it.edtNewQuantity.setText(product.newQuantity.toString())
-                it.tvTotalPrice.text=getString(R.string.total_price,product.totalPrice(),
+                var totalStr=getString(R.string.total_price,product.totalPrice(),
                     product.newQuantity, product.price)
+                it.tvTotalPrice.text=HtmlCompat.fromHtml(totalStr, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
     }
     private fun setupButtons(){

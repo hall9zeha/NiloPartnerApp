@@ -12,5 +12,5 @@
     <string name="cart_pay">Pagar</string>
     <string name="text_add_to_cart">Añadir al carrito</string>
     <string name="detail_quantity">Disponibles: %1$d</string>
-    <string name="total_price">Total: $%1$.2f S/(%2$d x $%3$.2f)</string>
+    <string name="total_price">&lt;b>&lt;big>Total: S/ %1$.2f&lt;big/> S&lt;/b>&lt;br/> (%2$d x $%3$.2f)</string>
 </resources>
