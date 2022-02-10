@@ -8,9 +8,13 @@ data class Product(
     var description:String?="",
     var imgUrl:String?="",
     var quantity:Int=0,
+    @get:Exclude var newQuantity:Int=1,
     var price:Double=0.0
 
 ) {
+
+    fun totalPrice():Double =newQuantity * price
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

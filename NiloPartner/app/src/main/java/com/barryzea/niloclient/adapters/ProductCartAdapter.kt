@@ -26,7 +26,7 @@ class ProductCartAdapter(private val productList:MutableList<Product>, private v
         val product=productList[position]
         holder.setListener(product)
         holder.bind.tvName.text=product.name
-        holder.bind.tvQuantity.text=product.quantity.toString()
+        holder.bind.tvQuantity.text=product.newQuantity.toString()
 
         val requestOptions = RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -42,6 +42,7 @@ class ProductCartAdapter(private val productList:MutableList<Product>, private v
         if(!productList.contains(product)){
             productList.add(product)
             notifyItemInserted(productList.size-1)
+            calcTotal()
         }
         else{
             update(product)
@@ -52,6 +53,7 @@ class ProductCartAdapter(private val productList:MutableList<Product>, private v
         if(index !=-1){
             productList[index] = product
             notifyItemChanged(index)
+            calcTotal()
         }
     }
     fun delete(product:Product){
@@ -59,7 +61,15 @@ class ProductCartAdapter(private val productList:MutableList<Product>, private v
         if(index !=-1){
             productList.removeAt(index)
             notifyItemRemoved(index)
+            calcTotal()
         }
+    }
+    private fun calcTotal(){
+        var result=0.0
+        for(product in productList){
+            result +=product.totalPrice()
+        }
+        listener.showTotal(result)
     }
     override fun getItemCount(): Int=  productList?.size
 
@@ -68,9 +78,11 @@ class ProductCartAdapter(private val productList:MutableList<Product>, private v
 
         fun setListener(product:Product){
             bind.ibSum.setOnClickListener {
+                product.newQuantity+=1
                 listener.setQuantity(product)
             }
             bind.ibSub.setOnClickListener {
+                product.newQuantity-=1
                 listener.setQuantity(product)
             }
         }

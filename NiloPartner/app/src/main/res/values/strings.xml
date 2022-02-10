@@ -6,7 +6,11 @@
     <string name="quantity">Cantidad</string>
     <string name="price">Precio</string>
     <string name="car_empty">Carrito vacío</string>
+    <string name="car_full">Total: S/%1$.2f </string>
     <string name="view_car">Ver Carrito</string>
     <string name="cart_title">Carrito de compra</string>
     <string name="cart_pay">Pagar</string>
+    <string name="text_add_to_cart">Añadir al carrito</string>
+    <string name="detail_quantity">Disponibles: %1$d</string>
+    <string name="total_price">Total: $%1$.2f S/(%2$d x $%3$.2f)</string>
 </resources>

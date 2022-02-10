@@ -12,6 +12,7 @@ import com.barryzea.niloclient.adapters.ProductAdapter
 import com.barryzea.niloclient.cart.CartFragment
 import com.barryzea.niloclient.commons.Constants.COLLECTION_PRODUCT
 import com.barryzea.niloclient.databinding.ActivityMainBinding
+import com.barryzea.niloclient.detail.DetailFragment
 
 import com.barryzea.niloclient.interfaces.MainAux
 import com.barryzea.niloclient.interfaces.OnProductListener
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var listenerFirestore:ListenerRegistration
     private lateinit var querySnapshot: EventListener<QuerySnapshot>
     private var productSelected:Product?=null
+    private var productCartList:MutableList<Product> = mutableListOf()
 
     private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
         var response=IdpResponse.fromResultIntent(it.data)
@@ -202,10 +204,53 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         }
     }
     override fun onClick(product: Product) {
+        var index=productCartList.indexOf(product)
+        if(index != -1)
+        {
+            productSelected=productCartList[index]
+        }
+        else {
+            productSelected=product
+        }
         productSelected=product
-
+        val fragment=DetailFragment()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.containerMain, fragment)
+            .addToBackStack(null)
+            .commit()
+        showButton(false)
     }
 
 
-    override fun getProductSelected(): Product? =productSelected
+    override fun getProductCart(): MutableList<Product> = productCartList
+
+    override fun getProductSelected(): Product?= productSelected
+    override fun showButton(isVisible: Boolean) {
+        bind.btnViewCar.visibility=if(isVisible) View.VISIBLE else View.GONE
+    }
+
+    override fun addProductToCart(product: Product) {
+        var index=productCartList.indexOf(product)
+        if(index != -1)
+        {
+            productCartList[index] = product
+        }
+        else {
+            productCartList.add(product)
+        }
+        updateTotal()
+    }
+
+    override fun updateTotal() {
+        var total=0.0
+        productCartList.forEach { product->
+            total += product.totalPrice()
+        }
+        if(total==0.0){
+            bind.tvTotal.text=getString(R.string.car_empty)
+        }
+        else{
+            bind.tvTotal.text=getString(R.string.car_full,total)
+        }
+    }
 }

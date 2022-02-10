@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.barryzea.niloclient.R
 import com.barryzea.niloclient.adapters.ProductCartAdapter
 import com.barryzea.niloclient.databinding.FragmentCartBinding
+import com.barryzea.niloclient.interfaces.MainAux
 import com.barryzea.niloclient.interfaces.OnCartListener
 import com.barryzea.niloclient.pojo.Product
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,6 +19,7 @@ class CartFragment : BottomSheetDialogFragment(),  OnCartListener {
     private var bind: FragmentCartBinding?=null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
     private lateinit var adapter:ProductCartAdapter
+    private var totalPrice=0.0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bind= FragmentCartBinding.inflate(LayoutInflater.from(activity))
@@ -27,6 +30,9 @@ class CartFragment : BottomSheetDialogFragment(),  OnCartListener {
             bottomSheetBehavior= BottomSheetBehavior.from(it.root.parent as View)
             bottomSheetBehavior.state=BottomSheetBehavior.STATE_EXPANDED
             setupRecyclerView()
+            setupButtons()
+            getProducts()
+
             return bottomSheetDialog
         }
         return super.onCreateDialog(savedInstanceState)
@@ -40,18 +46,33 @@ class CartFragment : BottomSheetDialogFragment(),  OnCartListener {
             }
         }
     }
-
+    private fun setupButtons(){
+        bind?.let{
+            it.ibCancel.setOnClickListener {
+                bottomSheetBehavior.state=BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+    }
+    private fun getProducts(){
+        (activity as MainAux)?.getProductCart()?.forEach {
+            adapter.add(it)
+        }
+    }
     override fun onDestroyView() {
+        (activity as MainAux)?.updateTotal()
         super.onDestroyView()
         bind=null
     }
 
     override fun setQuantity(product: Product) {
-        TODO("Not yet implemented")
+        adapter.update(product)
     }
 
     override fun showTotal(total: Double) {
-        TODO("Not yet implemented")
+       totalPrice=total
+        bind?.let{
+            it.tvTotal.text=getString(R.string.car_full, total)
+        }
     }
 
 }
