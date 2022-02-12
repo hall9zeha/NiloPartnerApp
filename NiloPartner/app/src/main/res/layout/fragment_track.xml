@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+
+    android:clickable="true"
+    android:focusable="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/clProgress"
+        android:rotation="90"
+        android:layout_margin="@dimen/common_padding_default"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1:1">
+
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_marginHorizontal="@dimen/common_padding_min"
+            android:layout_marginBottom="@dimen/margin_bottom_progress"
+            tools:progress="34"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbOrdered"
+        android:text="@string/order_status_ordered"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:background="@drawable/background_check_box"
+        app:layout_constraintStart_toStartOf="@id/clProgress"
+        app:layout_constraintTop_toTopOf="@id/clProgress"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbPreparing"
+        android:text="@string/order_status_preparing"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:background="@drawable/background_check_box"
+        app:layout_constraintStart_toStartOf="@id/clProgress"
+        app:layout_constraintTop_toBottomOf="@id/cbOrdered"
+        app:layout_constraintBottom_toTopOf="@id/cbSent"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbSent"
+        android:text="@string/order_status_sent"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:background="@drawable/background_check_box"
+        app:layout_constraintStart_toStartOf="@id/clProgress"
+        app:layout_constraintTop_toBottomOf="@id/cbPreparing"
+        app:layout_constraintBottom_toTopOf="@id/cbDelivered"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbDelivered"
+        android:text="@string/order_status_ordered"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:background="@drawable/background_check_box"
+        app:layout_constraintStart_toStartOf="@id/clProgress"
+        app:layout_constraintBottom_toBottomOf="@id/clProgress"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

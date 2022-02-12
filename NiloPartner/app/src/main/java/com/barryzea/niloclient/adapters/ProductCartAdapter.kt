@@ -71,6 +71,7 @@ class ProductCartAdapter(private val productList:MutableList<Product>, private v
         }
         listener.showTotal(result)
     }
+    fun getProducts():List<Product> = productList
     override fun getItemCount(): Int=  productList?.size
 
     inner class ViewHolder(view:View):RecyclerView.ViewHolder(view){

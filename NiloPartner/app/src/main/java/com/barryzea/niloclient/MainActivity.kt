@@ -1,5 +1,6 @@
 package com.barryzea.niloclient
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import com.barryzea.niloclient.detail.DetailFragment
 
 import com.barryzea.niloclient.interfaces.MainAux
 import com.barryzea.niloclient.interfaces.OnProductListener
+import com.barryzea.niloclient.order.OrderActivity
 import com.barryzea.niloclient.pojo.Product
 
 
@@ -140,6 +142,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                         }
                     }
             }
+            R.id.itemOrder->{startActivity(Intent(this, OrderActivity::class.java))}
         }
         return super.onOptionsItemSelected(item)
 

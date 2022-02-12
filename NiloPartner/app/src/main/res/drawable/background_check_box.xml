@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetTop="@dimen/common_padding_min"
+    android:insetBottom="@dimen/common_padding_min"
+    >
+    <shape android:shape="rectangle">
+        <solid android:color="@color/white"/>
+    </shape>
+
+</inset>

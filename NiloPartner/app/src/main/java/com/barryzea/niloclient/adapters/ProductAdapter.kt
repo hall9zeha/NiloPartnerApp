@@ -63,6 +63,7 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
             notifyItemRemoved(index)
         }
     }
+
     override fun getItemCount(): Int = products.let{products.size}
 
     /*
