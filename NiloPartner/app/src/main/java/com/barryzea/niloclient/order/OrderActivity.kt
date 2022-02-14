@@ -8,15 +8,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryzea.niloclient.R
 import com.barryzea.niloclient.adapters.OrderAdapter
 import com.barryzea.niloclient.commons.Constants
-import com.barryzea.niloclient.databinding.ActivityOrderBinding
+
 import com.barryzea.niloclient.interfaces.OnOrderListener
 import com.barryzea.niloclient.interfaces.OrderAux
 import com.barryzea.niloclient.pojo.Order
 import com.barryzea.niloclient.track.TrackFragment
+import com.barryzea.niloclient.databinding.ActivityOrderBinding
+
 import com.google.firebase.firestore.FirebaseFirestore
 
 class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
-        private lateinit var bind:ActivityOrderBinding
+        private lateinit var bind: ActivityOrderBinding
         private lateinit var adapter:OrderAdapter
         private lateinit var orderSelected:Order
     override fun onCreate(savedInstanceState: Bundle?) {

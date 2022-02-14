@@ -6,7 +6,8 @@
     android:background="@color/gray_100"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".order.OrderActivity">
+    tools:context="com.barryzea.niloclient.order.OrderActivity"
+    >
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="0dp"
         android:layout_height="0dp"
