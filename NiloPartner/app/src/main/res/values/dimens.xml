@@ -7,4 +7,6 @@
     <dimen name="product_cart_img_size">48dp</dimen>
     <dimen name="common_padding_medium">24dp</dimen>
     <dimen name="margin_bottom_progress">14dp</dimen>
+    <dimen name="chat_guideline_end">48dp</dimen>
+    <dimen name="chat_stroke">1dp</dimen>
 </resources>

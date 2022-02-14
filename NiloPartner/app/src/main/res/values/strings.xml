@@ -24,4 +24,5 @@
     <string name="order_status_unknown">Desconocido</string>
     <string name="order_title">Historial de compras</string>
     <string name="track_title">Seguimiento</string>
+    <string name="hint_chat_send">Escribe algo...</string>
 </resources>
