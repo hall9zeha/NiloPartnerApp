@@ -1,5 +1,6 @@
 package com.barryzea.nilopartner
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import com.barryzea.nilopartner.databinding.ActivityMainBinding
 import com.barryzea.nilopartner.dialogs.AddDialogFragment
 import com.barryzea.nilopartner.interfaces.MainAux
 import com.barryzea.nilopartner.interfaces.OnProductListener
+import com.barryzea.nilopartner.order.OrderActivity
 import com.barryzea.nilopartner.pojo.Product
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
@@ -140,6 +142,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                             bind.lnLoading.visibility=View.VISIBLE
                         }
                     }
+            }
+            R.id.itemOrder->{
+                startActivity(Intent(this,OrderActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)

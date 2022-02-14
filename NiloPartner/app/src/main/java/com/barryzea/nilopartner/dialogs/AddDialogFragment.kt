@@ -104,9 +104,24 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                             }
                         }
                     }
+
+
+                }
+
+                if(product!=null) {
+                    product?.apply {
+                        name = bind?.etName?.text.toString().trim()
+                        description = bind?.etDescription?.text.toString()
+                        quantity = bind?.etQuantity?.text.toString().toInt()
+                        price = bind?.etPrice?.text?.toString()!!.toDouble()
+                        imgUrl = product?.imgUrl
+
+                        updateProduct(this)
+                    }
                 }
 
             }
+
             negativeButton?.setOnClickListener { dismiss() }
         }
     }

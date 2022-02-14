@@ -5,4 +5,21 @@
     <string name="description">Descripción</string>
     <string name="quantity">Cantidad</string>
     <string name="price">Precio</string>
+    <string name="view_car">Ver Carrito</string>
+    <string name="cart_title">Carrito de compra</string>
+    <string name="cart_pay">Pagar</string>
+    <string name="text_add_to_cart">Añadir al carrito</string>
+    <string name="detail_quantity">Disponibles: %1$d</string>
+    <string name="total_price">&lt;b>&lt;big>Total: S/ %1$.2f&lt;big/> S&lt;/b>&lt;br/> (%2$d x $%3$.2f)</string>
+    <string name="car_full">Total: S/%1$.2f </string>
+    <string name="order_track">Seguir envío</string>
+    <string name="order_status">Estado: %1$s</string>
+    <string name="order_id">ID: %1$s</string>
+    <string name="order_chat_help">Necesitas ayuda?</string>
+    <string name="order_status_ordered">Pedido</string>
+    <string name="order_status_preparing">Preparando</string>
+    <string name="order_status_sent">Enviado</string>
+    <string name="order_status_delivered">Entregado</string>
+    <string name="order_status_unknown">Desconocido</string>
+    <string name="hint_status">Estado</string>
 </resources>

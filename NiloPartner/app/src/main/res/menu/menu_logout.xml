@@ -4,4 +4,8 @@
     <item android:id="@+id/itemLogOut"
         android:title="Cerrar sesión"
         app:showAsAction="never"/>
+    <item android:id="@+id/itemOrder"
+        android:title=""
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_history"/>
 </menu>
