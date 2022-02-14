@@ -13,7 +13,9 @@
         android:theme="@style/Theme.NiloClient">
         <activity
             android:name=".order.OrderActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/order_title"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">
