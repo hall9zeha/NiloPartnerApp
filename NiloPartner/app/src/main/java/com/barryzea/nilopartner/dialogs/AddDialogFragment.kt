@@ -80,46 +80,47 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
 
             positiveButton?.setOnClickListener {
                 enableUI(false)
-                uploadImage(product?.id) { eventPost ->
-                    if (eventPost.isSuccess == true) {
-                        bind?.let {
-                            if (product == null) {
-                                val product = Product(
-                                    name = it.etName.text.toString().trim(),
-                                    description = it.etDescription.text.toString(),
-                                    quantity = it.etQuantity.text.toString().toInt(),
-                                    price = it.etPrice.text.toString().toDouble(),
-                                    imgUrl = eventPost.photoUrl
-                                )
-                                saveProduct(product,eventPost.documentId!!)
-                            } else {
-                                product?.apply {
-                                    name = it.etName.text.toString().trim()
-                                    description = it.etDescription.text.toString()
-                                    quantity = it.etQuantity.text.toString().toInt()
-                                    price = it.etPrice.text.toString().toDouble()
-                                    imgUrl = eventPost.photoUrl
-                                    updateProduct(this)
+                if (photoSelectedUri != null) {
+                    uploadImage(product?.id) { eventPost ->
+                        if (eventPost.isSuccess == true) {
+
+                            bind?.let {
+                                if (product == null) {
+                                    val product = Product(
+                                        name = it.etName.text.toString().trim(),
+                                        description = it.etDescription.text.toString(),
+                                        quantity = it.etQuantity.text.toString().toInt(),
+                                        price = it.etPrice.text.toString().toDouble(),
+                                        imgUrl = eventPost.photoUrl
+                                    )
+                                    saveProduct(product, eventPost.documentId!!)
+                                } else {
+                                    product?.apply {
+                                        name = it.etName.text.toString().trim()
+                                        description = it.etDescription.text.toString()
+                                        quantity = it.etQuantity.text.toString().toInt()
+                                        price = it.etPrice.text.toString().toDouble()
+                                        imgUrl = eventPost.photoUrl
+                                        updateProduct(this)
+                                    }
                                 }
                             }
                         }
+
                     }
 
 
                 }
-
-                if(product!=null) {
+                else if (product != null) {
                     product?.apply {
                         name = bind?.etName?.text.toString().trim()
                         description = bind?.etDescription?.text.toString()
                         quantity = bind?.etQuantity?.text.toString().toInt()
                         price = bind?.etPrice?.text?.toString()!!.toDouble()
                         imgUrl = product?.imgUrl
-
                         updateProduct(this)
                     }
                 }
-
             }
 
             negativeButton?.setOnClickListener { dismiss() }
