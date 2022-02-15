@@ -1,11 +1,14 @@
 package com.barryzea.nilopartner.order
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.barryzea.nilopartner.R
 
 import com.barryzea.nilopartner.adapters.OrderAdapter
+import com.barryzea.nilopartner.chat.ChatFragment
 import com.barryzea.nilopartner.commons.Constants
 import com.barryzea.nilopartner.databinding.ActivityOrderBinding
 import com.barryzea.nilopartner.interfaces.OnOrderListener
@@ -65,7 +68,13 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
     }
 
     override fun onStartChat(order: Order) {
-
+        orderSelected=order
+       val fragment=ChatFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.containerMainOrder,fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun getOrderSelected(): Order =orderSelected
