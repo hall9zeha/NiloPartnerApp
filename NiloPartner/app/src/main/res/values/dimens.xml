@@ -9,4 +9,5 @@
     <dimen name="margin_bottom_progress">14dp</dimen>
     <dimen name="chat_guideline_end">48dp</dimen>
     <dimen name="chat_stroke">1dp</dimen>
+    <dimen name="chat_margin_horizontal">64dp</dimen>
 </resources>

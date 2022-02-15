@@ -7,6 +7,7 @@ data class Message(@get:Exclude var id:String ="",
                    var sender:String ="",
                    @get:Exclude var myUid:String="")
 {
+    @Exclude
     fun isSenderByMe():Boolean = sender == myUid
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
