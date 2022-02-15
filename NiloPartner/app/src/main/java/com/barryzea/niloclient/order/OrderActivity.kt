@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryzea.niloclient.R
 import com.barryzea.niloclient.adapters.OrderAdapter
+import com.barryzea.niloclient.chat.ChatFragment
 import com.barryzea.niloclient.commons.Constants
 
 import com.barryzea.niloclient.interfaces.OnOrderListener
@@ -66,7 +67,13 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
     }
 
     override fun onStartChat(order: Order) {
-
+        orderSelected=order
+        val fragment=ChatFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.containerMainOrder, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun getOrderSelected(): Order=orderSelected

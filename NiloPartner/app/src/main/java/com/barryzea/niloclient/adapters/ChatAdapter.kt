@@ -1,9 +1,11 @@
 package com.barryzea.niloclient.adapters
 
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.barryzea.niloclient.R
 import com.barryzea.niloclient.chat.OnChatListener
@@ -19,7 +21,24 @@ class ChatAdapter(private val chatList:MutableList<Message>, private val listene
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val message=chatList[position]
+        holder.setListener(message)
 
+        var gravity=Gravity.END
+        var background=ContextCompat.getDrawable(context, R.drawable.background_chat_client)
+        var textColor=ContextCompat.getColor(context, R.color.colorOnSecondary)
+
+        if(!message.isSenderByMe()){
+             gravity=Gravity.START
+             background=ContextCompat.getDrawable(context, R.drawable.background_chat_support)
+             textColor=ContextCompat.getColor(context, R.color.colorOnPrimary)
+        }
+
+        holder.bind.root.gravity=gravity
+        holder.bind.tvMessage.background=background
+        holder.bind.tvMessage.setTextColor(textColor)
+
+        holder.bind.tvMessage.text=message.message
     }
 
     override fun getItemCount(): Int =chatList.size
@@ -46,7 +65,7 @@ class ChatAdapter(private val chatList:MutableList<Message>, private val listene
     }
 
     inner class ViewHolder(view:View):RecyclerView.ViewHolder(view){
-        private val bind=ItemChatBinding.bind(view)
+         val bind=ItemChatBinding.bind(view)
 
         fun setListener(message:Message){
             bind.tvMessage.setOnLongClickListener {
