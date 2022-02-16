@@ -30,6 +30,7 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var bind: ActivityMainBinding
@@ -102,6 +103,16 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         configButtons()
 
 
+    }
+    private fun getTokenManual(){
+        //extraer el token de forma manual
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            task->
+            if(task.isSuccessful) {
+                val token = task.toString()
+                Log.i("get token", token.toString())
+            }
+        }
     }
     private fun configRecyclerView(){
         adapter = ProductAdapter(mutableListOf(), this)
