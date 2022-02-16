@@ -26,4 +26,7 @@
     <string name="track_title">Seguimiento</string>
     <string name="hint_chat_send">Escribe algo...</string>
     <string name="chat_title">Soporte</string>
+    <string name="notification_channel_id">Nilo App</string>
+    <string name="channel_name_nilo">Nilo</string>
+    <string name="description_channel">Canal de notificación por defecto de nilo</string>
 </resources>
