@@ -6,4 +6,16 @@ object Constants {
     const val PRODUCT_IMAGE="product_images"
     const val COLLECTION_REQUESTS="requests"
     const val PATH_CHAT="chats"
+    const val NILO_RS="https://androidfirechat.000webhostapp.com/niloPartner/NiloRS.php"
+    const val SEND_NOTIFICATION="sendNotification"
+
+    const val PARAM_METHOD="method"
+    const val PARAM_TITLE="title"
+    const val PARAM_MESSAGE="message"
+    const val PARAM_TOKENS="tokens"
+    const val PARAM_SUCCESS="success"
+    const val COLLECTION_USERS="users"
+    const val COLLECTION_TOKENS="tokens"
+    const val PROPERTY_TOKEN="token"
+
 }
