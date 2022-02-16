@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryzea.niloclient.adapters.ProductAdapter
@@ -49,7 +50,28 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 bind.lnLoading.visibility=View.GONE
 
                 Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-                //
+                //guardamos el token del usuario en firebase
+                val preference=PreferenceManager.getDefaultSharedPreferences(this)
+                val token=preference.getString(Constants.PROPERTY_TOKEN, null)
+                token?.let{
+                    val db=FirebaseFirestore.getInstance()
+                    val tokenMap= hashMapOf(Pair(Constants.PROPERTY_TOKEN, token))
+                    db.collection(Constants.COLLECTION_USERS)
+                        .document(user.uid)
+                        .collection(Constants.COLLECTION_TOKENS)
+                        .add(tokenMap)
+                        .addOnSuccessListener {
+                            preference.edit {
+                                putString(Constants.PROPERTY_TOKEN, null)
+                                    .apply()
+                            }
+                        }
+                        .addOnFailureListener {
+
+                        }
+
+                }
+
             }
         }
         else{
