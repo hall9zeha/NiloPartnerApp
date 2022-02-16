@@ -2,15 +2,18 @@ package com.barryzea.niloclient
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryzea.niloclient.adapters.ProductAdapter
 import com.barryzea.niloclient.cart.CartFragment
+import com.barryzea.niloclient.commons.Constants
 import com.barryzea.niloclient.commons.Constants.COLLECTION_PRODUCT
 import com.barryzea.niloclient.databinding.ActivityMainBinding
 import com.barryzea.niloclient.detail.DetailFragment
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 bind.lnLoading.visibility=View.GONE
 
                 Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+                //
             }
         }
         else{
@@ -74,6 +78,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         //configFirestore()
         //configFirestoreRealTime()
         configButtons()
+
 
     }
     private fun configRecyclerView(){
