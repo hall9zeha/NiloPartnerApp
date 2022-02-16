@@ -8,6 +8,7 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.barryzea.niloclient.MainActivity
@@ -46,6 +47,7 @@ class FcmService: FirebaseMessagingService() {
             .setContentTitle(remoteMessage.title)
             .setContentText(remoteMessage.body)
             .setAutoCancel(true)
+            .setColor(ContextCompat.getColor(this, R.color.yellow_a400))
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 

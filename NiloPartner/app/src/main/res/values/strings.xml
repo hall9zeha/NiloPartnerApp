@@ -17,8 +17,8 @@
     <string name="order_status">Estado: %1$s</string>
     <string name="order_id">ID: %1$s</string>
     <string name="order_chat_help">Necesitas ayuda?</string>
-    <string name="order_status_ordered">Pedido</string>
-    <string name="order_status_preparing">Preparando</string>
+    <string name="order_status_ordered">Aprovado</string>
+    <string name="order_status_preparing">Procesado</string>
     <string name="order_status_sent">Enviado</string>
     <string name="order_status_delivered">Entregado</string>
     <string name="order_status_unknown">Desconocido</string>
