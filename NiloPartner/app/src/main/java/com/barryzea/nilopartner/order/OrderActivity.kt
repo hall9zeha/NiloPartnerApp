@@ -15,12 +15,17 @@ import com.barryzea.nilopartner.fcm.NotificationRS
 import com.barryzea.nilopartner.interfaces.OnOrderListener
 import com.barryzea.nilopartner.interfaces.OrderAux
 import com.barryzea.nilopartner.pojo.Order
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
     private lateinit var bind:ActivityOrderBinding
     private lateinit var adapter:OrderAdapter
     private lateinit var orderSelected:Order
+    private lateinit var firebaseAnalytics:FirebaseAnalytics
     private val aValues:Array<String> by lazy {
         resources.getStringArray(R.array.status_value)
     }
@@ -35,6 +40,7 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
 
         setupRecyclerView()
         setupFirebase()
+        setupAnalytics()
     }
 
 
@@ -59,6 +65,9 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
             .addOnFailureListener {
                 Toast.makeText(this, "Error al consultar datos", Toast.LENGTH_SHORT).show()
             }
+    }
+    private fun setupAnalytics(){
+        firebaseAnalytics=Firebase.analytics
     }
     private fun notifyClient(order: Order){
         val db = FirebaseFirestore.getInstance()
@@ -97,6 +106,22 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
             .addOnSuccessListener {
                 Toast.makeText(this, "Orden Actualizada", Toast.LENGTH_SHORT).show()
                 notifyClient(order)
+
+                //Analytics enviando nuevos parámetros cuando se hace un envío que ya ha sido procesado
+                //usamos un bundle porque es el formato requerido por analytics
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_SHIPPING_INFO){
+                    val products= mutableListOf<Bundle>()
+                    order.products.forEach{
+                        val bundle=Bundle()
+                        bundle.putString("id_product", it.key)
+                        products.add(bundle)
+                    }
+                    param(FirebaseAnalytics.Param.SHIPPING, products.toTypedArray())
+                    param(FirebaseAnalytics.Param.PRICE, order.totalPrice)
+
+
+                }
+
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Error al actualizar orden", Toast.LENGTH_SHORT).show()
