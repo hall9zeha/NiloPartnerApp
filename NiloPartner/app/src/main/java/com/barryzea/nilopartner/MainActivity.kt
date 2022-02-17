@@ -25,8 +25,12 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.FirebaseException
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.ktx.Firebase
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var listenerFirestore:ListenerRegistration
     private lateinit var querySnapshot: EventListener<QuerySnapshot>
     private var productSelected:Product?=null
+    private lateinit var firebaseAnalytics:FirebaseAnalytics
 
     private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
         var response=IdpResponse.fromResultIntent(it.data)
@@ -47,11 +52,20 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 bind.lnLoading.visibility=View.GONE
                 bind.extFabCreate.show()
                 Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN){
+                    param(FirebaseAnalytics.Param.SUCCESS, 100)//Donde 100 representa un suceso exitosos, puede ser cualquier número o cadena
+                    param(FirebaseAnalytics.Param.METHOD, "login")
+                }
             }
         }
         else{
             if(response==null){
                 Toast.makeText(this, "Hasta pronto", Toast.LENGTH_SHORT).show()
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN){
+                    param(FirebaseAnalytics.Param.SUCCESS,200)//cancelado el inicio de sesión o cerrado
+                    param(FirebaseAnalytics.Param.METHOD,"login")
+                }
                 finish()
             }
             else{
@@ -61,6 +75,10 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     }
                     else{
                         Toast.makeText(this, "Código de error: ${it.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN){
+                        param(FirebaseAnalytics.Param.SUCCESS,it.errorCode.toLong())
+                        param(FirebaseAnalytics.Param.METHOD,"login")
                     }
                 }
             }
@@ -75,6 +93,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         //configFirestore()
         //configFirestoreRealTime()
         configButtons()
+        configAnalytics()
 
     }
     private fun configRecyclerView(){
@@ -134,12 +153,24 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 AuthUI.getInstance().signOut(this)
                     .addOnSuccessListener {
                         Toast.makeText(this, "Sesión Cerrada", Toast.LENGTH_SHORT).show()
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN){
+                            param(FirebaseAnalytics.Param.SUCCESS, 100)//sign_out successfully
+                            param(FirebaseAnalytics.Param.METHOD, "sign_out")
+                        }
                     }
                     .addOnCompleteListener {
                         if(it.isSuccessful){
                             bind.nsvProducts.visibility=View.GONE
                             bind.extFabCreate.hide()
                             bind.lnLoading.visibility=View.VISIBLE
+                        }
+                        else{
+                            Toast.makeText(this, "No se pudo cerrar la sesión", Toast.LENGTH_SHORT).show()
+                            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN){
+                                param(FirebaseAnalytics.Param.SUCCESS, 201)//sign_out error
+                                param(FirebaseAnalytics.Param.METHOD,"sign_out")
+
+                            }
                         }
                     }
             }
@@ -208,6 +239,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         productSelected=null
             AddDialogFragment().show(supportFragmentManager, AddDialogFragment::class.java.simpleName)
         }
+    }
+    private fun configAnalytics(){
+        firebaseAnalytics= Firebase.analytics
     }
     override fun onClick(product: Product) {
         productSelected=product
