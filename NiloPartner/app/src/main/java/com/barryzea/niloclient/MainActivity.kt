@@ -28,8 +28,12 @@ import com.barryzea.niloclient.pojo.Product
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
@@ -41,6 +45,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var querySnapshot: EventListener<QuerySnapshot>
     private var productSelected:Product?=null
     private var productCartList:MutableList<Product> = mutableListOf()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
         var response=IdpResponse.fromResultIntent(it.data)
@@ -101,6 +106,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         //configFirestore()
         //configFirestoreRealTime()
         configButtons()
+        configAnalytics()
 
 
     }
@@ -244,6 +250,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             fragment.show(supportFragmentManager.beginTransaction(), CartFragment::class.java.simpleName)
         }
     }
+    private fun configAnalytics(){
+        firebaseAnalytics=Firebase.analytics
+    }
     override fun onClick(product: Product) {
         var index=productCartList.indexOf(product)
         if(index != -1)
@@ -260,6 +269,13 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             .addToBackStack(null)
             .commit()
         showButton(false)
+
+        //Enviamos a firebase analytics el producto seleccionado
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM){
+            param(FirebaseAnalytics.Param.ITEM_ID, product.id!!)
+            param(FirebaseAnalytics.Param.ITEM_NAME, product.name!!)
+        }
+
     }
 
 

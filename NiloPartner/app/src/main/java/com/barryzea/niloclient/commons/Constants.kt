@@ -8,4 +8,5 @@ object Constants {
     const val PROPERTY_TOKEN="token"
     const val COLLECTION_USERS="users"
     const val COLLECTION_TOKENS="tokens"
+    const val USER_PROP_QUANTITY="quantity_product"
 }

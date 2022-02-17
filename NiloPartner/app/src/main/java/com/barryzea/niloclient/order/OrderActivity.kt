@@ -42,8 +42,8 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
     }
     private fun setupFirestore(){
         val db=FirebaseFirestore.getInstance()
-
         db.collection(Constants.COLLECTION_REQUESTS)
+
             .get()
             .addOnSuccessListener {
                 for(document in it){

@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cbDelivered"
-        android:text="@string/order_status_ordered"
+        android:text="@string/order_status_delivered"
         android:buttonTint="@color/yellow_a400_dark"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:background="@drawable/background_check_box"

@@ -5,17 +5,25 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.barryzea.niloclient.R
+import com.barryzea.niloclient.commons.Constants
 import com.barryzea.niloclient.databinding.FragmentTrackBinding
 import com.barryzea.niloclient.interfaces.OrderAux
 import com.barryzea.niloclient.pojo.Order
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class TrackFragment:Fragment() {
     private var bind:FragmentTrackBinding?=null
     private var order: Order?=null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +40,7 @@ class TrackFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getOrder()
-        setupActionBar()
+
     }
 
     private fun setupActionBar() {
@@ -42,7 +50,12 @@ class TrackFragment:Fragment() {
             setHasOptionsMenu(true)
         }
     }
-
+    private fun setupAnalytics(){
+        firebaseAnalytics=Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW){
+            param(FirebaseAnalytics.Param.METHOD,"check_track")
+        }
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==android.R.id.home){
             activity?.onBackPressed()
@@ -53,7 +66,11 @@ class TrackFragment:Fragment() {
     private fun getOrder() {
         order=(activity as OrderAux)?.getOrderSelected()
         order?.let {
-          updateUI(it)
+            updateUI(it)
+            getOrderInRealTime(it.id)
+            setupActionBar()
+
+            setupAnalytics()
         }
     }
 
@@ -66,7 +83,23 @@ class TrackFragment:Fragment() {
             it.cbDelivered.isChecked=order.status>4
         }
     }
-
+    private fun getOrderInRealTime(orderId:String){
+        val db=FirebaseFirestore.getInstance()
+        val docOrderRef=db.collection(Constants.COLLECTION_REQUESTS).document(orderId)
+        docOrderRef.addSnapshotListener { snapshot, error ->
+            if(error!=null){
+                Toast.makeText(activity, "Error al obtener esta orden", Toast.LENGTH_SHORT).show()
+                return@addSnapshotListener
+            }
+            if(snapshot !=null && snapshot.exists()){
+                val order=snapshot.toObject(Order::class.java)
+                order?.let{
+                    it.id=snapshot.id
+                    updateUI(it)
+                }
+            }
+        }
+    }
     override fun onDestroy() {
         (activity as? AppCompatActivity)?.let{
             it.supportActionBar?.setDisplayHomeAsUpEnabled(false)
