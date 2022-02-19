@@ -25,4 +25,8 @@
     <color name="secondaryTextColor">#000000</color>
     <color name="blue_800_dark">#003c8f</color>
     <color name="gray_100">#f5f5f5</color>
+    <color name="orange_500">#FF9800</color>
+    <color name="blue_google">#4285f4</color>
+    <color name="blue_facebook">#1877f2</color>
+    <color name="green_500">#4CAF50</color>
 </resources>

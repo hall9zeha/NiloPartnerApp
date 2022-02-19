@@ -26,6 +26,7 @@ import com.barryzea.niloclient.interfaces.MainAux
 import com.barryzea.niloclient.interfaces.OnProductListener
 import com.barryzea.niloclient.order.OrderActivity
 import com.barryzea.niloclient.pojo.Product
+import com.firebase.ui.auth.AuthMethodPickerLayout
 
 
 import com.firebase.ui.auth.AuthUI
@@ -161,9 +162,23 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 AuthUI.IdpConfig.FacebookBuilder().build(),
                 AuthUI.IdpConfig.PhoneBuilder().build())
 
+                //configuramos nuestra propia vista para el inicio de sesión confirebaseUI
+                val loginView=AuthMethodPickerLayout.Builder(R.layout.view_login)
+                    .setEmailButtonId(R.id.btnEmail)
+                    .setGoogleButtonId(R.id.btnGoogle)
+                    .setFacebookButtonId(R.id.btnFacebook)
+                    .setPhoneButtonId(R.id.btnPhone)
+                    .setTosAndPrivacyPolicyId(R.id.tvPolicy)
+                    .build()
+
+
+
+
                 resultLauncher.launch(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
+                    .setAuthMethodPickerLayout(loginView)
+                    .setTosAndPrivacyPolicyUrls("https://wallhaven.cc/toplist", "https://wallhaven.cc/toplist")
                     .setIsSmartLockEnabled(false)
                     .build())
             }

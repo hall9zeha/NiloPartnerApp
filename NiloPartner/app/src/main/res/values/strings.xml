@@ -34,4 +34,9 @@
     <string name="facebook_application_id" translatable="false">681025193082526</string>
     <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb681025193082526</string>
+    <string name="welcome_text">Bienvenido porfavor inicie sesión</string>
+    <string name="email_btn">Email</string>
+    <string name="google_btn">Google</string>
+    <string name="facebook_btn">Facebook</string>
+    <string name="phone_btn">Phone</string>
 </resources>
