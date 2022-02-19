@@ -28,5 +28,10 @@
     <string name="chat_title">Soporte</string>
     <string name="notification_channel_id">Nilo App</string>
     <string name="channel_name_nilo">Nilo</string>
+
     <string name="description_channel">Canal de notificación por defecto de nilo</string>
+
+    <string name="facebook_application_id" translatable="false">681025193082526</string>
+    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb681025193082526</string>
 </resources>

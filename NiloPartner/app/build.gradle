@@ -58,4 +58,6 @@ dependencies {
     //annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
     kapt 'com.github.bumptech.glide:compiler:4.13.0'
 
+    implementation 'com.facebook.android:facebook-login:8.1.0'
+
 }
