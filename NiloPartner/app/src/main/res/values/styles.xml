@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LoginTheme" parent="FirebaseUI">
+        <!-- Required for sign-in flow styling -->
+        <item name="colorPrimary">@color/blue_gray_800</item>
+        <item name="colorPrimaryDark">@color/blue_gray_800_dark</item>
+        <item name="colorAccent">@color/yellow_a400_dark</item>
+
+        <item name="colorControlNormal">@color/blue_gray_800</item>
+        <item name="colorControlActivated">@color/blue_gray_800_dark</item>
+        <item name="colorControlHighlight">@color/blue_gray_800_light</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="PreferencesTheme" parent="Theme.NiloClient">
+        <item name="colorSecondary">@color/yellow_a400_dark</item>
+    </style>
+</resources>

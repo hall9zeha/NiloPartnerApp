@@ -169,6 +169,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     .setFacebookButtonId(R.id.btnFacebook)
                     .setPhoneButtonId(R.id.btnPhone)
                     .setTosAndPrivacyPolicyId(R.id.tvPolicy)
+
                     .build()
 
 
@@ -180,6 +181,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     .setAuthMethodPickerLayout(loginView)
                     .setTosAndPrivacyPolicyUrls("https://wallhaven.cc/toplist", "https://wallhaven.cc/toplist")
                     .setIsSmartLockEnabled(false)
+                    .setTheme(R.style.LoginTheme)
                     .build())
             }
 
