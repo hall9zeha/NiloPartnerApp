@@ -26,6 +26,7 @@ import com.barryzea.niloclient.interfaces.MainAux
 import com.barryzea.niloclient.interfaces.OnProductListener
 import com.barryzea.niloclient.order.OrderActivity
 import com.barryzea.niloclient.pojo.Product
+import com.barryzea.niloclient.profile.ProfileFragment
 import com.firebase.ui.auth.AuthMethodPickerLayout
 
 
@@ -36,6 +37,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -151,7 +153,8 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         firebaseAuth= FirebaseAuth.getInstance()
         authStateListener=FirebaseAuth.AuthStateListener {auth->
             auth.currentUser?.let{
-                supportActionBar?.title= auth.currentUser?.displayName
+                //supportActionBar?.title= auth.currentUser?.displayName
+                updateTitle(auth.currentUser!!)
                 bind.nsvProducts.visibility= View.VISIBLE
                 bind.lnLoading.visibility=View.GONE
 
@@ -236,6 +239,13 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     }
             }
             R.id.itemOrder->{startActivity(Intent(this, OrderActivity::class.java))}
+            R.id.itemProfile->{
+                val fragment=ProfileFragment()
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.containerMain, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
         return super.onOptionsItemSelected(item)
 
@@ -362,5 +372,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
     override fun clearCart() {
         productCartList.clear()
+    }
+
+    override fun updateTitle(user: FirebaseUser) {
+        supportActionBar?.title=user.displayName
     }
 }

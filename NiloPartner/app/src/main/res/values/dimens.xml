@@ -11,4 +11,5 @@
     <dimen name="chat_stroke">1dp</dimen>
     <dimen name="chat_margin_horizontal">64dp</dimen>
     <dimen name="login_width_button">160dp</dimen>
+    <dimen name="profile_width_textview">260dp</dimen>
 </resources>

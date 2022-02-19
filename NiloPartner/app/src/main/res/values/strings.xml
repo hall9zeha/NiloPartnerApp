@@ -39,4 +39,8 @@
     <string name="google_btn">Google</string>
     <string name="facebook_btn">Facebook</string>
     <string name="phone_btn">Phone</string>
+    <string name="hint_full_name">Nombre completo</string>
+    <string name="hint_photo_url">Url de foto</string>
+    <string name="profile_update">Actualizar</string>
+    <string name="profile">Perfil de usuario</string>
 </resources>

@@ -36,6 +36,8 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
         Glide.with(context)
             .load(product.imgUrl)
             .apply(requestOptions)
+            .placeholder(R.drawable.ic_access_time)
+            .error(R.drawable.ic_broken_image)
             .into(holder.bind.imgProduct)
 
     }

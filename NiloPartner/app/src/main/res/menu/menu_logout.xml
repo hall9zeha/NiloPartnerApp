@@ -8,4 +8,7 @@
         android:title=""
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_history"/>
+    <item android:id="@+id/itemProfile"
+        android:title="Editar perfil"
+       />
 </menu>

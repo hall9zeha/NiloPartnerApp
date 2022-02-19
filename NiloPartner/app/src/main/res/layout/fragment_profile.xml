@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:focusable="true"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:padding="@dimen/common_padding_default"
+    android:gravity="center_horizontal">
+    <ImageButton
+        android:layout_width="@dimen/login_width_button"
+        android:layout_height="@dimen/login_width_button"
+        android:id="@+id/ibProfile"
+        android:background="?attr/selectableItemBackground"
+        />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="@dimen/profile_width_textview"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_full_name"
+        android:layout_marginTop="@dimen/common_padding_min"
+        app:endIconMode="clear_text"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edtFullName"
+            android:inputType="textPersonName"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="@dimen/profile_width_textview"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_photo_url"
+        android:layout_marginTop="@dimen/common_padding_min"
+        app:endIconMode="clear_text"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edtUrlPhoto"
+            android:inputType="textUri"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnUpdate"
+        android:text="@string/profile_update"/>
+
+
+</LinearLayout>
