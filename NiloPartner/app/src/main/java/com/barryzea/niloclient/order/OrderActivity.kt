@@ -2,6 +2,7 @@ package com.barryzea.niloclient.order
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.barryzea.niloclient.interfaces.OrderAux
 import com.barryzea.niloclient.pojo.Order
 import com.barryzea.niloclient.track.TrackFragment
 import com.barryzea.niloclient.databinding.ActivityOrderBinding
+import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -23,6 +25,7 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
         private lateinit var bind: ActivityOrderBinding
         private lateinit var adapter:OrderAdapter
         private lateinit var orderSelected:Order
+        private var clientId:String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -37,19 +40,31 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
         adapter= OrderAdapter(mutableListOf(), this)
 
         bind.recyclerView.apply {
-            layoutManager=LinearLayoutManager(this@OrderActivity)
-            adapter=this@OrderActivity.adapter
+            FirebaseAuth.getInstance().currentUser?.let{
+                clientId=it.uid
+
+                layoutManager=LinearLayoutManager(this@OrderActivity)
+                adapter=this@OrderActivity.adapter
+
+            }
         }
     }
     private fun setupFirestore(){
         val db=FirebaseFirestore.getInstance()
         db.collection(Constants.COLLECTION_REQUESTS)
-            .orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
+             //mostramos solamente las compras de cada cliente como en cobra
+            .whereEqualTo(Constants.CLIENT_ID,clientId.toString())
+            //.orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
+            //consultamos el campo que tenga los dos parámetros siguientes como si fuera un or
+            //.whereIn(Constants.STATUS, listOf(3,2))
+            //ahora al revés no traerá los que designemos
+            //.whereNotIn(Constants.STATUS, listOf(3,2))
             .get()
             .addOnSuccessListener {
                 for(document in it){
                     val order=document.toObject(Order::class.java)
                     order.id=document.id
+
                     adapter.add(order)
                 }
             }
