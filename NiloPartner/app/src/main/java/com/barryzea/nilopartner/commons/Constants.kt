@@ -17,5 +17,8 @@ object Constants {
     const val COLLECTION_USERS="users"
     const val COLLECTION_TOKENS="tokens"
     const val PROPERTY_TOKEN="token"
+    const val STATUS="status"
+    const val TIMESTAMP="timestamp"
+
 
 }

@@ -19,6 +19,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 
 class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
@@ -52,8 +53,10 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
         }
     }
     private fun setupFirebase() {
+        //Agregando oedenamiento don orderby esto ya lo habías implementado antes
        val db=FirebaseFirestore.getInstance()
         db.collection(Constants.COLLECTION_REQUESTS)
+            .orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener {
                 for(document in it){
