@@ -9,4 +9,5 @@ object Constants {
     const val COLLECTION_USERS="users"
     const val COLLECTION_TOKENS="tokens"
     const val USER_PROP_QUANTITY="quantity_product"
+    const val TIMESTAMP="timestamp"
 }

@@ -17,6 +17,7 @@ import com.barryzea.niloclient.track.TrackFragment
 import com.barryzea.niloclient.databinding.ActivityOrderBinding
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
         private lateinit var bind: ActivityOrderBinding
@@ -43,7 +44,7 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
     private fun setupFirestore(){
         val db=FirebaseFirestore.getInstance()
         db.collection(Constants.COLLECTION_REQUESTS)
-
+            .orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener {
                 for(document in it){
