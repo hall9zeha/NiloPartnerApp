@@ -54,11 +54,19 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
         db.collection(Constants.COLLECTION_REQUESTS)
              //mostramos solamente las compras de cada cliente como en cobra
             .whereEqualTo(Constants.CLIENT_ID,clientId.toString())
-            //.orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
+            .orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
             //consultamos el campo que tenga los dos parámetros siguientes como si fuera un or
             //.whereIn(Constants.STATUS, listOf(3,2))
             //ahora al revés no traerá los que designemos
             //.whereNotIn(Constants.STATUS, listOf(3,2))
+            //filtrar campos si el elemento es mayor que
+            //.whereGreaterThan(Constants.STATUS, 3)
+            //ahora menor que
+            //.whereLessThan(Constants.STATUS, 3)
+            //mayor o igual que
+            //.whereGreaterThanOrEqualTo(Constants.STATUS,3)
+            //menor o igual que
+            //.whereLessThanOrEqualTo(Constants.STATUS,3)
             .get()
             .addOnSuccessListener {
                 for(document in it){
