@@ -1,6 +1,7 @@
 package com.barryzea.niloclient.adapters
 
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,27 +26,40 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product= products[position]
         holder.setListener(product)
-        holder.bind.tvName.text=product.name
-        holder.bind.tvPrice.text=product.price.toString()
-        holder.bind.tvQuantity.text=product.quantity.toString()
 
-        val requestOptions =RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .centerCrop()
+        if(product.id==null){
+            holder.bind.btnMore.visibility=View.VISIBLE
+            holder.bind.containerProduct.visibility=View.GONE
+        }
+        else{
+            holder.bind.btnMore.visibility=View.GONE
+            holder.bind.containerProduct.visibility=View.VISIBLE
+            holder.bind.tvName.text=product.name
+            holder.bind.tvPrice.text=product.price.toString()
+            holder.bind.tvQuantity.text=product.quantity.toString()
 
-        Glide.with(context)
-            .load(product.imgUrl)
-            .apply(requestOptions)
-            .placeholder(R.drawable.ic_access_time)
-            .error(R.drawable.ic_broken_image)
-            .into(holder.bind.imgProduct)
+
+            val requestOptions =RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+
+            Glide.with(context)
+                .load(product.imgUrl)
+                .apply(requestOptions)
+                .placeholder(R.drawable.ic_access_time)
+                .error(R.drawable.ic_broken_image)
+                .into(holder.bind.imgProduct)
+        }
+
+
 
     }
 
     fun add(product:Product){
         if(!products.contains(product)){
-            products.add(product)
-            notifyItemInserted(products.size-1)
+            //products.add(product)
+           products.add(products.size -1, product)
+            notifyItemInserted(products.size-2)
         }
         else{
             update(product)
@@ -77,7 +91,7 @@ class ProductAdapter (private val products:MutableList<Product>, private val lis
 
         fun setListener(product:Product){
             bind.root.setOnClickListener { listener.onClick(product) }
-
+            bind.btnMore.setOnClickListener { listener.loadMore() }
         }
 
     }

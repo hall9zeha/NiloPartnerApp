@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private var productSelected:Product?=null
     private var productCartList:MutableList<Product> = mutableListOf()
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var queryPagination:Query?=null
 
     private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
         var response=IdpResponse.fromResultIntent(it.data)
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         }
     }
     private fun configRecyclerView(){
-        adapter = ProductAdapter(mutableListOf(), this)
+        adapter = ProductAdapter(mutableListOf(Product()), this)
         bind.rvProducts.apply {
             layoutManager = GridLayoutManager(
                 this@MainActivity, 3, GridLayoutManager.HORIZONTAL, false
@@ -284,21 +285,39 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         val db=FirebaseFirestore.getInstance()
         val dbRef=db.collection(COLLECTION_PRODUCT)
 
-        querySnapshot= EventListener<QuerySnapshot> { snapshots, error ->
-            for(snapshot in snapshots!!.documentChanges)
-            {
+        querySnapshot = EventListener<QuerySnapshot> { snapshots, error ->
 
-                var product:Product=snapshot.document.toObject(Product::class.java)!!
-                product.id=snapshot.document.id
-                when(snapshot.type){
-                    DocumentChange.Type.ADDED->{adapter.add(product)}
-                    DocumentChange.Type.MODIFIED->{adapter.update(product)}
-                    DocumentChange.Type.REMOVED->{adapter.delete(product)}
+            snapshots?.let { items ->
+                //obtenemos el último elemento del snashot devuelto en la consulta
+                val lastItem = items.documents[items.size() - 1]
+                //le pasamos ese elemento a la variable que declaramos al inicio para que comience a traer nuevos datos desde este último
+                queryPagination=dbRef
+                    .startAfter(lastItem)
+                    .limit(5)
+
+
+                for (snapshot in snapshots!!.documentChanges) {
+
+                    var product: Product = snapshot.document.toObject(Product::class.java)!!
+                    product.id = snapshot.document.id
+                    when (snapshot.type) {
+                        DocumentChange.Type.ADDED -> {
+                            adapter.add(product)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            adapter.update(product)
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            adapter.delete(product)
+                        }
+                    }
+
                 }
+
 
             }
         }
-        listenerFirestore=dbRef.addSnapshotListener(querySnapshot)
+        listenerFirestore=dbRef.limit(5).addSnapshotListener(querySnapshot)
 
 
 
@@ -376,5 +395,47 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
     override fun updateTitle(user: FirebaseUser) {
         supportActionBar?.title=user.displayName
+    }
+
+    override fun loadMore() {
+        val db=FirebaseFirestore.getInstance()
+        val dbRef=db.collection(COLLECTION_PRODUCT)
+
+        queryPagination?.let{
+            it.addSnapshotListener { snapshots, error ->
+                snapshots?.let { items ->
+                    //obtenemos el último elemento del snashot devuelto en la consulta
+                    val lastItem = items.documents[items.size() - 1]
+                    //le pasamos ese elemento a la variable que declaramos al inicio para que comience a traer nuevos datos desde este último
+                    queryPagination=dbRef
+                        .startAfter(lastItem)
+                        .limit(5)
+
+
+                    for (snapshot in snapshots!!.documentChanges) {
+
+                        var product: Product = snapshot.document.toObject(Product::class.java)!!
+                        product.id = snapshot.document.id
+                        when (snapshot.type) {
+                            DocumentChange.Type.ADDED -> {
+                                adapter.add(product)
+                            }
+                            DocumentChange.Type.MODIFIED -> {
+                                adapter.update(product)
+                            }
+                            DocumentChange.Type.REMOVED -> {
+                                adapter.delete(product)
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
+        }
+
+
+
     }
 }

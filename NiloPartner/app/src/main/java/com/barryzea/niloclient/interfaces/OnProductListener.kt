@@ -4,5 +4,5 @@ import com.barryzea.niloclient.pojo.Product
 
 interface OnProductListener {
     fun onClick(product: Product)
-
+    fun loadMore()
 }

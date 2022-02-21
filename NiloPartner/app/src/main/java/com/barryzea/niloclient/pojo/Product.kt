@@ -3,7 +3,7 @@ package com.barryzea.niloclient.pojo
 import com.google.firebase.firestore.Exclude
 
 data class Product(
-    @Exclude @set:Exclude @get:Exclude var id:String?="",
+    @Exclude @set:Exclude @get:Exclude var id:String?=null,
     var name:String?="",
     var description:String?="",
     var imgUrl:String?="",
