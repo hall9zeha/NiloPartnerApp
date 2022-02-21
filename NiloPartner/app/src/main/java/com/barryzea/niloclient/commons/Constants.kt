@@ -12,4 +12,5 @@ object Constants {
     const val TIMESTAMP="timestamp"
     const val STATUS="status"
     const val CLIENT_ID="clientId"
+    const val QUANTITY="quantity"
 }
