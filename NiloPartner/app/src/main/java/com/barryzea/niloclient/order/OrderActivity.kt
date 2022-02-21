@@ -53,8 +53,8 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
         val db=FirebaseFirestore.getInstance()
         db.collection(Constants.COLLECTION_REQUESTS)
              //mostramos solamente las compras de cada cliente como en cobra
-            .whereEqualTo(Constants.CLIENT_ID,clientId.toString())
-            .orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
+            //.whereEqualTo(Constants.CLIENT_ID,clientId.toString())
+            //.orderBy(Constants.TIMESTAMP, Query.Direction.DESCENDING)
             //consultamos el campo que tenga los dos parámetros siguientes como si fuera un or
             //.whereIn(Constants.STATUS, listOf(3,2))
             //ahora al revés no traerá los que designemos
@@ -67,6 +67,11 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
             //.whereGreaterThanOrEqualTo(Constants.STATUS,3)
             //menor o igual que
             //.whereLessThanOrEqualTo(Constants.STATUS,3)
+            //índice más complejo con cuatro filtros, creo que no es nada nuevo
+            .whereEqualTo(Constants.CLIENT_ID,clientId)
+            .orderBy(Constants.STATUS, Query.Direction.ASCENDING)
+            .whereLessThan(Constants.STATUS, 4)
+            .orderBy(Constants.TIMESTAMP,Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener {
                 for(document in it){
