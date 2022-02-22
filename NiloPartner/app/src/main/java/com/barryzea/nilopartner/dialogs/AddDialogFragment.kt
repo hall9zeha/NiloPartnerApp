@@ -4,7 +4,10 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -26,8 +29,10 @@ import com.barryzea.nilopartner.pojo.Product
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 import java.security.AllPermission
 
 class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
@@ -81,7 +86,8 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             positiveButton?.setOnClickListener {
                 enableUI(false)
                 if (photoSelectedUri != null) {
-                    uploadImage(product?.id) { eventPost ->
+                    //uploadImage(product?.id) { eventPost ->
+                        uploadReducedImage(product?.id ){eventPost->
                         if (eventPost.isSuccess == true) {
 
                             bind?.let {
@@ -192,6 +198,78 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
 
             }
         }
+    }
+    private fun uploadReducedImage(productId:String?, callback:(EventPost)->Unit){
+
+        val eventPost=EventPost()
+        eventPost.documentId=productId ?: FirebaseFirestore.getInstance().collection(Constants.COLLECTION_PRODUCT)
+            .document().id
+
+        //creamos una carpeta para cada usuario que agrege productos con su id como nombre de directorio uid/product_images/imagen
+        FirebaseAuth.getInstance().currentUser?.let{user->
+            val imageRef=FirebaseStorage.getInstance().reference.child(user.uid)
+                .child(Constants.PRODUCT_IMAGE)
+            val photoRef=imageRef.child(eventPost.documentId!!)
+            photoSelectedUri?.let{uri->
+                bind?.let{bind->
+                    getBitmapFromUri(uri)?.let{bitmap->
+                        bind.pbUpload.visibility= View.VISIBLE
+                        //comprimimos el tamaño de la imagen
+                        val baos=ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.JPEG,90, baos)
+
+
+                        val photoRef=imageRef.child(eventPost.documentId!!)
+                        //en lugar de putFile
+                        //photoRef.putFile(uri)
+                        //le pasamos en byteArray
+                          photoRef.putBytes(baos.toByteArray())
+                            .addOnProgressListener {
+                                val progress=(100 * it.bytesTransferred / it.totalByteCount ).toInt()
+                                it.run {
+                                    bind.pbUpload.progress=progress
+                                    bind.tvProgress.text=String.format( "%s%%",progress)
+                                }
+                            }
+                            .addOnSuccessListener {
+                                it.storage.downloadUrl.addOnSuccessListener {downloadUrl->
+
+                                    eventPost.isSuccess=true
+                                    eventPost.photoUrl=downloadUrl.toString()
+                                    callback(eventPost)
+
+                                }
+                            }
+                            .addOnFailureListener{
+                                eventPost.isSuccess=false
+                                enableUI(true)
+                                Toast.makeText(requireActivity(), "Error al subir imagen", Toast.LENGTH_SHORT).show()
+                                bind?.pbUpload?.visibility=View.GONE
+                                callback(eventPost)
+                            }
+                    }
+
+
+                }
+            }
+        }
+
+
+    }
+    //retornar el mapa de bits desde la uri
+    private fun getBitmapFromUri(uri: Uri): Bitmap?{
+        //ya que getBitmap está obsoleto en versiones recientes de android, usamos esta sentencia if
+        activity?.let{
+            val bitmap=if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.P){
+                val source=ImageDecoder.createSource(it.contentResolver, uri)
+                ImageDecoder.decodeBitmap(source)
+            }
+            else{
+                MediaStore.Images.Media.getBitmap(it.contentResolver, uri)
+            }
+            return bitmap
+        }
+        return null
     }
     private fun saveProduct(product:Product, documentId:String){
         val db=FirebaseFirestore.getInstance()
