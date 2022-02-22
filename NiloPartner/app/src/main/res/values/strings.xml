@@ -25,4 +25,8 @@
     <string name="hint_chat_send">Escribe algo...</string>
     <string name="chat_title">Soporte</string>
     <string name="order_title">Historial de compras</string>
+    <string name="delete_dialog_title">¿Eliminar producto?</string>
+    <string name="delete_dialog_msg">El producto se eliminará permanentemente</string>
+    <string name="delete_dialog_confirm">Eliminar</string>
+    <string name="delete_dialog_cancel">Cancelar</string>
 </resources>

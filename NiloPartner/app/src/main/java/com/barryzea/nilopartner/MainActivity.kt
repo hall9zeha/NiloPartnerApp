@@ -25,6 +25,7 @@ import com.barryzea.nilopartner.pojo.Product
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.FirebaseException
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -252,25 +253,32 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
     override fun onLongClick(product: Product) {
 
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.delete_dialog_title)
+            .setMessage(R.string.delete_dialog_msg)
+            .setPositiveButton(R.string.delete_dialog_confirm){ _,_->
+                val db=FirebaseFirestore.getInstance()
 
-        val db=FirebaseFirestore.getInstance()
-
-        val dbRef=db.collection(COLLECTION_PRODUCT)
-        product.id?.let{id->
-            FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
-                .delete()
-                .addOnSuccessListener {
-                    dbRef.document(id)
+                val dbRef=db.collection(COLLECTION_PRODUCT)
+                product.id?.let{id->
+                    FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
                         .delete()
-                        .addOnFailureListener {
-                            Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                        .addOnSuccessListener {
+                            dbRef.document(id)
+                                .delete()
+                                .addOnFailureListener {
+                                    Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                                }
                         }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Error al eliminar imagen", Toast.LENGTH_SHORT).show()
-                }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Error al eliminar imagen", Toast.LENGTH_SHORT).show()
+                        }
 
-        }
+                }
+            }
+            .setNegativeButton(R.string.delete_dialog_cancel,null)
+            .show()
+
        
     }
 
