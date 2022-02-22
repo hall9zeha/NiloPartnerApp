@@ -261,18 +261,25 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
                 val dbRef=db.collection(COLLECTION_PRODUCT)
                 product.id?.let{id->
-                    FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
-                        .delete()
-                        .addOnSuccessListener {
-                            dbRef.document(id)
-                                .delete()
-                                .addOnFailureListener {
-                                    Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
-                                }
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "Error al eliminar imagen", Toast.LENGTH_SHORT).show()
-                        }
+                    product.imgUrl?.let{url->
+                        val photoRef=FirebaseStorage.getInstance().getReferenceFromUrl(url)
+                            photoRef
+                            //FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
+                            .delete()
+                            .addOnSuccessListener {
+                                dbRef.document(id)
+                                    .delete()
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Error al eliminar imagen", Toast.LENGTH_SHORT).show()
+                            }
+
+
+                    }
+
 
                 }
             }
