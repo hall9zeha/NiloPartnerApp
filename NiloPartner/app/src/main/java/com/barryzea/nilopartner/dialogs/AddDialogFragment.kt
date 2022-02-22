@@ -267,9 +267,25 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             else{
                 MediaStore.Images.Media.getBitmap(it.contentResolver, uri)
             }
-            return bitmap
+            return getResizedImage(bitmap, 320)
         }
         return null
+    }
+    //retornamos el bitmap redimensionado
+    private fun getResizedImage(image:Bitmap, maxSize:Int):Bitmap{
+        var width=image.width
+        var height=image.height
+        if(width<=maxSize && height<=maxSize) return image
+        val bitmapRatio=width.toFloat() / height.toFloat()
+        if(bitmapRatio>1){
+            width=maxSize
+            height=(width/bitmapRatio).toInt()
+        }
+        else{
+            height=maxSize
+            width=(height/bitmapRatio).toInt()
+        }
+        return Bitmap.createScaledBitmap(image, width,height,true)
     }
     private fun saveProduct(product:Product, documentId:String){
         val db=FirebaseFirestore.getInstance()
