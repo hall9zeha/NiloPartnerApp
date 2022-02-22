@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryzea.nilopartner.adapters.ProductAdapter
+import com.barryzea.nilopartner.commons.Constants
 import com.barryzea.nilopartner.commons.Constants.COLLECTION_PRODUCT
 import com.barryzea.nilopartner.databinding.ActivityMainBinding
 import com.barryzea.nilopartner.dialogs.AddDialogFragment
@@ -31,6 +32,7 @@ import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
@@ -250,14 +252,24 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
     override fun onLongClick(product: Product) {
 
+
         val db=FirebaseFirestore.getInstance()
+
         val dbRef=db.collection(COLLECTION_PRODUCT)
-        product.id?.let{
-            dbRef.document(it)
+        product.id?.let{id->
+            FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
                 .delete()
-                .addOnFailureListener {
-                    Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                .addOnSuccessListener {
+                    dbRef.document(id)
+                        .delete()
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                        }
                 }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Error al eliminar imagen", Toast.LENGTH_SHORT).show()
+                }
+
         }
        
     }
