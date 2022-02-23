@@ -43,4 +43,14 @@
     <string name="hint_photo_url">Url de foto</string>
     <string name="profile_update">Actualizar</string>
     <string name="profile">Perfil de usuario</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="prefs_fcm_title">Recibir notificaciones</string>
+    <string name="prefs_offers_key">prefs_offers</string>
+    <string name="prefs_offers_title">Ofertas y promociones</string>
+    <string name="settings">Configuración</string>
+    <string name="topic_offers">topic_offers</string>
+
+
 </resources>

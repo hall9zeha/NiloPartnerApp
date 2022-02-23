@@ -27,6 +27,8 @@ import com.barryzea.niloclient.interfaces.OnProductListener
 import com.barryzea.niloclient.order.OrderActivity
 import com.barryzea.niloclient.pojo.Product
 import com.barryzea.niloclient.profile.ProfileFragment
+import com.barryzea.niloclient.settings.SettingsActivity
+import com.barryzea.niloclient.settings.SettingsFragment
 import com.firebase.ui.auth.AuthMethodPickerLayout
 
 
@@ -246,6 +248,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     .add(R.id.containerMain, fragment)
                     .addToBackStack(null)
                     .commit()
+            }
+            R.id.itemSettings->{
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)

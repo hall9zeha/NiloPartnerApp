@@ -12,6 +12,7 @@
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/drawable/ic_send.xml" value="0.153" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/activity_order.xml" value="0.20416666666666666" />
+        <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/activity_settings.xml" value="0.1361111111111111" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/fragment_cart.xml" value="0.25" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/fragment_chat.xml" value="0.20416666666666666" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/fragment_detail.xml" value="0.33" />
@@ -20,12 +21,13 @@
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/fragment_track.xml" value="0.25" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/item_chat.xml" value="0.33" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/item_order.xml" value="0.25" />
-        <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/item_product.xml" value="0.25" />
+        <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/item_product.xml" value="0.2" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/item_product_cart.xml" value="0.20416666666666666" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/layout/view_login.xml" value="0.25" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/menu/menu_logout.xml" value="0.20416666666666666" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.137" />
+        <entry key="..\:/LEARNING CURSO_ANDROID/FIREBASE EXPERTO A-Z/NiloPartnerApp/NiloPartner/app/src/main/res/xml/root_preferences.xml" value="0.21" />
       </map>
     </option>
   </component>

@@ -15,4 +15,5 @@
     <style name="PreferencesTheme" parent="Theme.NiloClient">
         <item name="colorSecondary">@color/yellow_a400_dark</item>
     </style>
+
 </resources>
