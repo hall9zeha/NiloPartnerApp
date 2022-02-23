@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -14,6 +16,9 @@ import androidx.preference.PreferenceManager
 import com.barryzea.niloclient.MainActivity
 import com.barryzea.niloclient.R
 import com.barryzea.niloclient.commons.Constants
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -33,10 +38,26 @@ class FcmService: FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         remoteMessage.notification?.let{
-            sendNotification(it)
+            val imgUrl="https://cms-assets.tutsplus.com/uploads/users/798/posts/27376/preview_image/firebase@2x.png"
+            Glide.with(applicationContext)
+                .asBitmap()
+                .load(imgUrl)
+                .into(object:CustomTarget<Bitmap?>(){
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap?>?
+                    ) {
+                        sendNotification(it,resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+
+                    }
+                } )
+
         }
     }
-    private fun sendNotification(remoteMessage: RemoteMessage.Notification){
+    private fun sendNotification(remoteMessage: RemoteMessage.Notification,bitmap:Bitmap?=null){
         val intent=Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent= PendingIntent.getActivity(this, 0,intent,PendingIntent.FLAG_ONE_SHOT)
@@ -50,6 +71,8 @@ class FcmService: FirebaseMessagingService() {
             .setColor(ContextCompat.getColor(this, R.color.yellow_a400))
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
+            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+                .bigLargeIcon(null))
 
         val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //creamos el canal de la notificación ya ques obligatoria a artir de android 8
