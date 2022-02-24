@@ -4,6 +4,9 @@
     <item android:id="@+id/itemLogOut"
         android:title="Cerrar sesión"
         app:showAsAction="never"/>
+    <item android:id="@+id/itemPromo"
+        android:title="@string/promo"
+        app:showAsAction="never"/>
     <item android:id="@+id/itemOrder"
         android:title=""
         app:showAsAction="ifRoom"

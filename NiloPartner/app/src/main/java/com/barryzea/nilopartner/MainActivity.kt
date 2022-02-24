@@ -22,6 +22,7 @@ import com.barryzea.nilopartner.interfaces.MainAux
 import com.barryzea.nilopartner.interfaces.OnProductListener
 import com.barryzea.nilopartner.order.OrderActivity
 import com.barryzea.nilopartner.pojo.Product
+import com.barryzea.nilopartner.promo.PromoFragment
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
@@ -179,6 +180,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             }
             R.id.itemOrder->{
                 startActivity(Intent(this,OrderActivity::class.java))
+            }
+            R.id.itemPromo->{
+                PromoFragment().show(supportFragmentManager, PromoFragment::class.java.simpleName)
             }
         }
         return super.onOptionsItemSelected(item)

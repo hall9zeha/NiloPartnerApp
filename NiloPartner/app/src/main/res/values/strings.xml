@@ -29,4 +29,7 @@
     <string name="delete_dialog_msg">El producto se eliminará permanentemente</string>
     <string name="delete_dialog_confirm">Eliminar</string>
     <string name="delete_dialog_cancel">Cancelar</string>
+    <string name="hint_title">Título</string>
+    <string name="hint_topic">Topic</string>
+    <string name="promo">Promociones</string>
 </resources>
