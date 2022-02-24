@@ -94,7 +94,7 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
                 val index=aKeys.indexOf(order.status)
 
                 val notificationRS=NotificationRS()
-                notificationRS.sendNotification("Tu pedido ha sido ${aValues[index]}",names,tokensStr)
+                notificationRS.sendNotification("Tu pedido ha sido ${aValues[index]}",names,tokensStr,order.id,order.status)
             }
             .addOnFailureListener {
 

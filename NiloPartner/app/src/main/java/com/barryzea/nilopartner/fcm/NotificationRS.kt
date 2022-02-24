@@ -12,12 +12,14 @@ import kotlin.jvm.Throws
 
 class NotificationRS {
 
-    fun sendNotification(title:String, message:String, tokens:String){
+    fun sendNotification(title:String, message:String, tokens:String, orderId:String, status:Int){
         val params=JSONObject()
         params.put(Constants.PARAM_METHOD, Constants.SEND_NOTIFICATION)
         params.put(Constants.PARAM_TITLE, title)
         params.put(Constants.PARAM_MESSAGE, message)
         params.put(Constants.PARAM_TOKENS, tokens)
+        params.put(Constants.PROP_ID,orderId)
+        params.put(Constants.STATUS, status)
 
         val jsonObjectRequest:JsonObjectRequest=object:JsonObjectRequest(Method.POST, Constants.NILO_RS, params,
             Response.Listener{response ->

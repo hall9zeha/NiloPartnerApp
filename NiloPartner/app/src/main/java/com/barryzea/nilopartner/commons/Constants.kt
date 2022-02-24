@@ -18,6 +18,8 @@ object Constants {
     const val COLLECTION_TOKENS="tokens"
     const val PROPERTY_TOKEN="token"
     const val STATUS="status"
+    const val PROP_ID="id"
+
     const val TIMESTAMP="timestamp"
 
 
