@@ -1,5 +1,6 @@
 package com.barryzea.niloclient.order
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +35,22 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
 
         setupRecyclerView()
         setupFirestore()
+        checkIntent(intent)
+    }
+
+    private fun checkIntent(intent: Intent?) {
+        intent?.let{
+            val id=it.getStringExtra("id")?:""
+            val status=intent.getIntExtra("status", 0)
+            orderSelected= Order(id=id, status=status)
+            val fragment=TrackFragment()
+
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.containerMainOrder, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun setupRecyclerView() {

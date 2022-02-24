@@ -18,7 +18,14 @@
         <activity
             android:name=".order.OrderActivity"
             android:exported="false"
-            android:label="@string/order_title" />
+            android:label="@string/order_title" >
+            <intent-filter>
+                <action android:name="OPEN_ORDER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">

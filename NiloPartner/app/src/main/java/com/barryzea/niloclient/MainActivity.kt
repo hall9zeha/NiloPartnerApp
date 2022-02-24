@@ -77,10 +77,10 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                         .collection(Constants.COLLECTION_TOKENS)
                         .add(tokenMap)
                         .addOnSuccessListener {
-                            preference.edit {
+                           /* preference.edit {
                                 putString(Constants.PROPERTY_TOKEN, null)
                                     .apply()
-                            }
+                            }*/
                         }
                         .addOnFailureListener {
 
@@ -117,6 +117,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         //configFirestoreRealTime()
         configButtons()
         configAnalytics()
+        getTokenManual()
 
 
     }
@@ -125,7 +126,13 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
             task->
             if(task.isSuccessful) {
-                val token = task.toString()
+
+                val token = task.result
+                val preferences=PreferenceManager.getDefaultSharedPreferences(this)
+                preferences.edit {
+                    putString(Constants.PROPERTY_TOKEN, token)
+                        .apply()
+                }
                 Log.i("get token", token.toString())
             }
         }

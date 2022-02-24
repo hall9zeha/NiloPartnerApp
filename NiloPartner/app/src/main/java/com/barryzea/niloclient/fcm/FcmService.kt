@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager
 import com.barryzea.niloclient.MainActivity
 import com.barryzea.niloclient.R
 import com.barryzea.niloclient.commons.Constants
+import com.barryzea.niloclient.order.OrderActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -38,6 +39,9 @@ class FcmService: FirebaseMessagingService() {
 //manejando las notificaciones en primer plano
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+    if(remoteMessage.data.isNotEmpty()){
+        sendNotificationByData(remoteMessage.data)
+    }
         remoteMessage.notification?.let {
             //poniendo imagen de manera dinámica
             val imgUrl =
@@ -86,6 +90,49 @@ class FcmService: FirebaseMessagingService() {
              .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)
                  .bigLargeIcon(null))
         }
+
+        val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        //creamos el canal de la notificación ya ques obligatoria a artir de android 8
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            val channelName=getString(R.string.channel_name_nilo)
+            val description=getString(R.string.description_channel)
+            val importance =NotificationManager.IMPORTANCE_HIGH
+            val mChannel=NotificationChannel(channelId, channelName,importance)
+            mChannel.description=description
+            notificationManager.createNotificationChannel(mChannel)
+        }
+
+        notificationManager.notify(0, notificationBuilder.build())
+
+    }
+    private fun sendNotificationByData(data:Map<String, String>){
+        val intent=Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent= PendingIntent.getActivity(this, 0,intent,PendingIntent.FLAG_ONE_SHOT)
+        val channelId=getString(R.string.notification_channel_id)
+        val defaultSoundUri=RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notificationBuilder=NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle(data["title"])
+            .setContentText(data["body"])
+            .setAutoCancel(true)
+            .setColor(ContextCompat.getColor(this, R.color.yellow_a400))
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(data["body"]))
+
+        //agregando boton de acción a la notificación
+        val trackIntent=Intent(this, OrderActivity::class.java).apply {
+            putExtra("action_intent",1)
+            putExtra("id","TTnJd4Bj2kNTQWoSVpp0")
+            putExtra("status", 3)
+        }
+
+        val trackPendingIntent=PendingIntent.getActivity(this, System.currentTimeMillis().toInt(),trackIntent,
+        0)
+        val action=NotificationCompat.Action.Builder(R.drawable.ic_shipping, "Rastrear ahora",
+            trackPendingIntent).build()
+        notificationBuilder.addAction(action)
 
         val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //creamos el canal de la notificación ya ques obligatoria a artir de android 8
