@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import java.time.format.TextStyle
 
 class FcmService: FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
@@ -37,24 +38,31 @@ class FcmService: FirebaseMessagingService() {
 //manejando las notificaciones en primer plano
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        remoteMessage.notification?.let{
-            val imgUrl="https://cms-assets.tutsplus.com/uploads/users/798/posts/27376/preview_image/firebase@2x.png"
-            Glide.with(applicationContext)
-                .asBitmap()
-                .load(imgUrl)
-                .into(object:CustomTarget<Bitmap?>(){
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap?>?
-                    ) {
-                        sendNotification(it,resource)
-                    }
+        remoteMessage.notification?.let {
+            //poniendo imagen de manera dinámica
+            val imgUrl =
+                it.imageUrl//"https://cms-assets.tutsplus.com/uploads/users/798/posts/27376/preview_image/firebase@2x.png"
 
-                    override fun onLoadCleared(placeholder: Drawable?) {
+            if (imgUrl == null) {
+                sendNotification(it)
+            } else {
+                Glide.with(applicationContext)
+                    .asBitmap()
+                    .load(imgUrl)
+                    .into(object : CustomTarget<Bitmap?>() {
+                        override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: Transition<in Bitmap?>?
+                        ) {
+                            sendNotification(it, resource)
+                        }
 
-                    }
-                } )
+                        override fun onLoadCleared(placeholder: Drawable?) {
 
+                        }
+                    })
+
+            }
         }
     }
     private fun sendNotification(remoteMessage: RemoteMessage.Notification,bitmap:Bitmap?=null){
@@ -71,8 +79,13 @@ class FcmService: FirebaseMessagingService() {
             .setColor(ContextCompat.getColor(this, R.color.yellow_a400))
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
-            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)
-                .bigLargeIcon(null))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(remoteMessage.body))
+
+        bitmap?.let{
+         notificationBuilder
+             .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+                 .bigLargeIcon(null))
+        }
 
         val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //creamos el canal de la notificación ya ques obligatoria a artir de android 8
