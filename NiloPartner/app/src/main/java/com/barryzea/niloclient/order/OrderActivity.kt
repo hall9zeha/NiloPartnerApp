@@ -40,16 +40,20 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
 
     private fun checkIntent(intent: Intent?) {
         intent?.let{
-            val id=it.getStringExtra("id")?:""
-            val status=intent.getIntExtra("status", 0)
-            orderSelected= Order(id=id, status=status)
-            val fragment=TrackFragment()
+            val actionIntent=it.getIntExtra(Constants.ACTION_INTENT,0)
+            actionIntent?.let{
+                val id=intent.getStringExtra(Constants.PROP_ID)?:""
+                val status=intent.getIntExtra(Constants.STATUS, 0)
+                orderSelected= Order(id=id, status=status)
+                val fragment=TrackFragment()
 
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.containerMainOrder, fragment)
-                .addToBackStack(null)
-                .commit()
+                supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.containerMainOrder, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+
         }
     }
 

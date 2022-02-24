@@ -122,10 +122,14 @@ class FcmService: FirebaseMessagingService() {
             .setStyle(NotificationCompat.BigTextStyle().bigText(data["body"]))
 
         //agregando boton de acción a la notificación
+        val actionIntent= data[Constants.ACTION_INTENT]?.toInt()
+        val orderId= data[Constants.PROP_ID]
+        val status= data[Constants.STATUS]?.toInt()
+
         val trackIntent=Intent(this, OrderActivity::class.java).apply {
-            putExtra("action_intent",1)
-            putExtra("id","TTnJd4Bj2kNTQWoSVpp0")
-            putExtra("status", 3)
+            putExtra(Constants.ACTION_INTENT,actionIntent)
+            putExtra(Constants.PROP_ID,orderId)
+            putExtra(Constants.STATUS, status)
         }
 
         val trackPendingIntent=PendingIntent.getActivity(this, System.currentTimeMillis().toInt(),trackIntent,
@@ -133,7 +137,7 @@ class FcmService: FirebaseMessagingService() {
         val action=NotificationCompat.Action.Builder(R.drawable.ic_shipping, "Rastrear ahora",
             trackPendingIntent).build()
         notificationBuilder.addAction(action)
-
+        //***************************************
         val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //creamos el canal de la notificación ya ques obligatoria a artir de android 8
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){

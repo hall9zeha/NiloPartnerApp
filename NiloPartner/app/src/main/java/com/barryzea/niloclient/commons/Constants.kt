@@ -15,4 +15,6 @@ object Constants {
     const val CLIENT_ID="clientId"
     const val QUANTITY="quantity"
     const val MY_PHOTO="my_photo"
+    const val ACTION_INTENT="action_intent"
+    const val PROP_ID="id"
 }
