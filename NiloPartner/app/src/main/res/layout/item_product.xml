@@ -36,7 +36,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvName"
-            tools:text="Nombre del producto"
+            tools:text="Nombre del producto hardcodeado desde android"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imgProduct"/>

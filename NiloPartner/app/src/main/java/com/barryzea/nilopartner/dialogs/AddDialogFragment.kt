@@ -99,7 +99,8 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                                         description = it.etDescription.text.toString(),
                                         quantity = it.etQuantity.text.toString().toInt(),
                                         price = it.etPrice.text.toString().toDouble(),
-                                        imgUrl = eventPost.photoUrl
+                                        imgUrl = eventPost.photoUrl,
+                                        sellerId = eventPost.sellerId
                                     )
                                     saveProduct(product, eventPost.documentId!!)
                                 } else {
@@ -213,6 +214,8 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
 
         //creamos una carpeta para cada usuario que agrege productos con su id como nombre de directorio uid/product_images/imagen
         FirebaseAuth.getInstance().currentUser?.let{user->
+
+            eventPost.sellerId=user.uid
             val imageRef=FirebaseStorage.getInstance().reference.child(user.uid)
                 .child(Constants.PRODUCT_IMAGE)
             val photoRef=imageRef.child(eventPost.documentId!!)
@@ -307,13 +310,15 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             .set(product)
             .addOnSuccessListener {
                 Toast.makeText(context, "producto agregado", Toast.LENGTH_SHORT).show()
+                dismiss()
             }
             .addOnCompleteListener {
                 enableUI(true)
                 bind?.pbUpload?.visibility=View.INVISIBLE
-                dismiss()
+
             }
             .addOnFailureListener {
+                enableUI(true)
                 Toast.makeText(context, "error al insertar", Toast.LENGTH_SHORT).show()
             }
     }

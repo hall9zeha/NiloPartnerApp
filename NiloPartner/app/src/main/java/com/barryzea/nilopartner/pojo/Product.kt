@@ -8,7 +8,8 @@ data class Product(
     var description:String?="",
     var imgUrl:String?="",
     var quantity:Int=0,
-    var price:Double=0.0
+    var price:Double=0.0,
+    var sellerId:String=""
 
 ) {
     override fun equals(other: Any?): Boolean {
