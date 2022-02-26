@@ -80,14 +80,16 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
         configButtons()
         val dialog = dialog as? AlertDialog
         dialog?.let{
+
             positiveButton=it.getButton(Dialog.BUTTON_POSITIVE)
             negativeButton=it.getButton(Dialog.BUTTON_NEGATIVE)
 
+            product?.let{positiveButton?.text = "Actualizar"}
             positiveButton?.setOnClickListener {
                 enableUI(false)
-                if (photoSelectedUri != null) {
+               // if (photoSelectedUri != null) {
                     //uploadImage(product?.id) { eventPost ->
-                        uploadReducedImage(product?.id ){eventPost->
+                        uploadReducedImage(product?.id , product?.imgUrl){eventPost->
                         if (eventPost.isSuccess == true) {
 
                             bind?.let {
@@ -116,8 +118,8 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                     }
 
 
-                }
-                else if (product != null) {
+             //   }
+               /* else if (product != null) {
                     product?.apply {
                         name = bind?.etName?.text.toString().trim()
                         description = bind?.etDescription?.text.toString()
@@ -126,7 +128,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                         imgUrl = product?.imgUrl
                         updateProduct(this)
                     }
-                }
+                }*/
             }
 
             negativeButton?.setOnClickListener { dismiss() }
@@ -136,6 +138,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
     private fun initProduct() {
        product=(activity as? MainAux)?.getProductSelected()
         product?.let{product->
+            dialog?.setTitle("Actualizar producto")
             bind?.etName?.setText(product.name)
             bind?.etDescription?.setText(product.description)
             bind?.etPrice?.setText(product.price.toString())
@@ -199,9 +202,12 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             }
         }
     }
-    private fun uploadReducedImage(productId:String?, callback:(EventPost)->Unit){
+    private fun uploadReducedImage(productId:String?,  imageUrl:String?,callback:(EventPost)->Unit){
 
         val eventPost=EventPost()
+        imageUrl?.let{
+            eventPost.photoUrl=it
+        }
         eventPost.documentId=productId ?: FirebaseFirestore.getInstance().collection(Constants.COLLECTION_PRODUCT)
             .document().id
 
@@ -210,9 +216,14 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             val imageRef=FirebaseStorage.getInstance().reference.child(user.uid)
                 .child(Constants.PRODUCT_IMAGE)
             val photoRef=imageRef.child(eventPost.documentId!!)
-            photoSelectedUri?.let{uri->
+            if(photoSelectedUri == null){
+                eventPost.isSuccess=true
+                callback(eventPost)
+            }
+            else{
+            //photoSelectedUri?.let{uri->
                 bind?.let{bind->
-                    getBitmapFromUri(uri)?.let{bitmap->
+                    getBitmapFromUri(photoSelectedUri!!)?.let{bitmap->
                         bind.pbUpload.visibility= View.VISIBLE
                         //comprimimos el tamaño de la imagen
                         val baos=ByteArrayOutputStream()
@@ -335,6 +346,8 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             etDescription.isEnabled=enable
             etPrice.isEnabled=enable
             etQuantity.isEnabled=enable
+            tvProgress.visibility=if(enable) View.INVISIBLE else View.VISIBLE
+            pbUpload.visibility=if(enable)View.INVISIBLE else View.VISIBLE
         }
     }
     override fun onDestroyView() {
