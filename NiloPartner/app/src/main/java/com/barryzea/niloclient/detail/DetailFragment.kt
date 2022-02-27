@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.barryzea.niloclient.R
+import com.barryzea.niloclient.commons.Constants
 import com.barryzea.niloclient.databinding.FragmentDetailBinding
 import com.barryzea.niloclient.interfaces.MainAux
 import com.barryzea.niloclient.pojo.Product
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.firebase.storage.FirebaseStorage
 
 class DetailFragment : Fragment() {
 
@@ -40,20 +42,35 @@ class DetailFragment : Fragment() {
     private fun getProduct() {
        product=(activity as MainAux)?.getProductSelected()
         product?.let{product->
-            bind?.let{
-                it.tvName.text=product.name
-                it.tvDescription.text=product.description
-                it.tvQuantity.text=getString(R.string.detail_quantity, product.quantity)
+            bind?.let{bind->
+                bind.tvName.text=product.name
+                bind.tvDescription.text=product.description
+                bind.tvQuantity.text=getString(R.string.detail_quantity, product.quantity)
 
                 setNewQuantity(product)
 
-                Glide.with(this)
+              /*  Glide.with(this)
                     .load(product.imgUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .placeholder(R.drawable.ic_image_search)
                     .error(R.drawable.ic_broken_image)
-                    .into(it.imgProduct)
+                    .into(it.imgProduct)*/
+                context?.let{context ->  
+                    val prodRef=FirebaseStorage.getInstance().reference
+                        .child(product.sellerId)
+                        .child(Constants.PRODUCT_IMAGE)
+                        .child(product.id!!)
+
+                    prodRef.listAll()
+                        .addOnSuccessListener {imgList->
+                            val detailAdapter=DetailAdapter(imgList.items, context)
+                            bind.vpProduct.apply {
+                                adapter=detailAdapter
+                            }
+                        }
+            }
+
             }
         }
     }

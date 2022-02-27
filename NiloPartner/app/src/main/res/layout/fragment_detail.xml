@@ -7,11 +7,21 @@
     android:clickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <ImageView
+  <!--  <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/imgProduct"
         android:background="@color/gray_100"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="16:9"/>-->
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/vpProduct"
+
         app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +37,7 @@
         tools:text="Nombre del producto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgProduct"/>
+        app:layout_constraintTop_toBottomOf="@id/vpProduct"/>
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="0dp"
         android:layout_height="wrap_content"
