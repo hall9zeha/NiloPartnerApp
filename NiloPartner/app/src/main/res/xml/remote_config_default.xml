@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap xmlns:android="http://schemas.android.com/apk/res/android">
-
+        <entry>
+            <key>isPromoDay</key>
+            <value>false</value>
+        </entry>
+        <entry>
+            <key>promCounter</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>percentage</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>photoUrl</key>
+            <value>no image</value>
+        </entry>
+        <entry>
+            <key>message</key>
+            <value>Sin promociones el día de hoy</value>
+        </entry>
 </defaultsMap>

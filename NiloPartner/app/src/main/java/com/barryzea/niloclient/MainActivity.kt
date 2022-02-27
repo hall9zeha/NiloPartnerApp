@@ -141,6 +141,26 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(R.xml.remote_config_default)
+        //solicitar y extraer datos de remoteconfig
+        remoteConfig.fetchAndActivate()
+            .addOnSuccessListener {
+
+            }
+            .addOnFailureListener {
+
+            }
+                //si no hay ningún error se extraerán los datos ya sea desde el servidor o localmente
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    val isPromoDay=remoteConfig.getBoolean("isPromoDay")
+                    val promCounter=remoteConfig.getLong("promCounter")
+                    val percentage=remoteConfig.getDouble("percentage")
+                    val photoUrl=remoteConfig.getString("photoUrl")
+                    val message=remoteConfig.getString("message")
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+                }
+            }
     }
 
     private fun getTokenManual(){
