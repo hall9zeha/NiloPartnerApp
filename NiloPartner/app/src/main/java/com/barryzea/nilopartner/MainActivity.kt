@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var bind:ActivityMainBinding
@@ -325,6 +326,8 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     0-> confirmDelete(product)
                     1->{
                         productSelected=product
+                        //En un dispositivo huawei(mate 10p lite) no funciona la badera ACTION_PICK con la combinación de EXTRA_ALLOW_MULTIPLE
+                        //así que lo cambiamos por ACTION_GET_CONTENT, no es muy amigable pero funciona
                         val intent=Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                         intent.type = "image/*"
                         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -341,25 +344,39 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             .setTitle(R.string.delete_dialog_title)
             .setMessage(R.string.delete_dialog_msg)
             .setPositiveButton(R.string.delete_dialog_confirm){ _,_->
-                val db=FirebaseFirestore.getInstance()
 
-                val dbRef=db.collection(COLLECTION_PRODUCT)
                 product.id?.let{id->
                     product.imgUrl?.let{url->
-                        val photoRef=FirebaseStorage.getInstance().getReferenceFromUrl(url)
-                        photoRef
-                            //FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
-                            .delete()
-                            .addOnSuccessListener {
-                                dbRef.document(id)
-                                    .delete()
-                                    .addOnFailureListener {
-                                        Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+                        //usamos el try catch en el caso de que la url de la imagen esté vacía
+                        //ya que estamos eliminando por referencia de url
+                        //si salta la excepción pasamos a eliminar el registro del producto directamente en el catch
+                        try {
+                            val photoRef=FirebaseStorage.getInstance().getReferenceFromUrl(url)
+                            photoRef
+                                //FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
+                                .delete()
+                                .addOnSuccessListener {
+                                    deleteProductFromFirestore(id)
+                                }
+                                .addOnFailureListener {
+                                    //Si la imágen ya no está en storage no nos permitirá eliminar el registro del producto
+                                    //entonces tomamos la excepción desde este listener e intentamos borrar el registro
+                                    //ya que la imagen no estará disponible
+                                    if((it as StorageException).errorCode== StorageException.ERROR_OBJECT_NOT_FOUND)
+                                    {
+                                        deleteProductFromFirestore(id)
+                                    }else {
+                                        Toast.makeText(
+                                            this,
+                                            "Error al eliminar imagen",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "Error al eliminar imagen", Toast.LENGTH_SHORT).show()
-                            }
+                                }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            deleteProductFromFirestore(id)
+                        }
 
 
                     }
@@ -370,6 +387,15 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             .setNegativeButton(R.string.delete_dialog_cancel,null)
             .show()
 
+    }
+    private fun deleteProductFromFirestore(productId:String){
+        val db=FirebaseFirestore.getInstance()
+        val dbRef=db.collection(COLLECTION_PRODUCT)
+        dbRef.document(productId)
+            .delete()
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al eliminar registro", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun getProductSelected(): Product? =productSelected
