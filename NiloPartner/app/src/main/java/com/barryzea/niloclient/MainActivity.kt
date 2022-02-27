@@ -43,6 +43,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+
 import java.security.MessageDigest
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
@@ -111,6 +114,11 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
         super.onCreate(savedInstanceState)
         bind= ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
+
+        //Remote config
+        configToolbar()
+        configRemoteConfig()
+        //remote config
         configAuth()
         configRecyclerView()
         //configFirestore()
@@ -121,6 +129,20 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
 
 
     }
+
+    private fun configToolbar() {
+
+    }
+
+    private fun configRemoteConfig() {
+        val remoteConfig=Firebase.remoteConfig
+        val configSettings= remoteConfigSettings {
+            minimumFetchIntervalInSeconds=5
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_default)
+    }
+
     private fun getTokenManual(){
         //extraer el token de forma manual
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
