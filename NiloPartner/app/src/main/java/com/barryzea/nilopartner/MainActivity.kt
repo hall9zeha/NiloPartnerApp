@@ -1,18 +1,18 @@
 package com.barryzea.nilopartner
 
+import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.GridLayout
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryzea.nilopartner.adapters.ProductAdapter
 import com.barryzea.nilopartner.commons.Constants
 import com.barryzea.nilopartner.commons.Constants.COLLECTION_PRODUCT
@@ -27,7 +27,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.FirebaseException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -35,7 +35,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var bind:ActivityMainBinding
@@ -46,8 +45,11 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     private lateinit var querySnapshot: EventListener<QuerySnapshot>
     private var productSelected:Product?=null
     private lateinit var firebaseAnalytics:FirebaseAnalytics
+    private val snackbar:Snackbar by lazy {
+        Snackbar.make(bind.root , "", Snackbar.LENGTH_INDEFINITE)
+    }
 
-    private val resultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
+    private val authLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
         var response=IdpResponse.fromResultIntent(it.data)
         if(it.resultCode== RESULT_OK){
             val user=FirebaseAuth.getInstance().currentUser
@@ -88,6 +90,63 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             }
         }
     }
+    //variables para subir mas de una imagen
+    private var count=0
+    private var uriList= mutableListOf<Uri>()
+
+    private var galleryResult=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if(it.resultCode== RESULT_OK){
+            if(it.data?.clipData!=null){
+                count=it.data!!.clipData!!.itemCount
+                for(i in 0..count -1){
+                    uriList.add(it.data!!.clipData!!.getItemAt(i).uri)
+                }
+                if(count >0){
+                    uploadImage(0)
+                }
+            }
+        }
+    }
+
+    private fun uploadImage(position: Int) {
+
+       FirebaseAuth.getInstance().currentUser?.let{user->
+                snackbar.apply {
+                    setText("Subiendo imagen ${position + 1} de $count")
+                    show()
+                }
+                val productRef=FirebaseStorage.getInstance().reference
+                    .child(user.uid)
+                    .child(Constants.PRODUCT_IMAGE)
+                    .child(productSelected!!.id!!)
+                    .child("image${position+1}")
+
+               productRef.putFile(uriList[position])
+                   .addOnSuccessListener {
+                        if(position < count -1){
+                            uploadImage(position +1)
+
+                        }
+                       else{
+                           snackbar.apply {
+                               setText("Imágenes subidas correctamente")
+                               duration = Snackbar.LENGTH_SHORT
+                               show()
+                           }
+                       }
+                    }
+                    .addOnFailureListener{
+                        snackbar.apply {
+                            setText("Error al subir imagen ${position +1}")
+                            duration = Snackbar.LENGTH_LONG
+                            show()
+                        }
+                    }
+
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind= ActivityMainBinding.inflate(layoutInflater)
@@ -135,7 +194,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.GoogleBuilder().build())
 
-                resultLauncher.launch(AuthUI.getInstance()
+                authLauncher.launch(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
                     .setIsSmartLockEnabled(false)
@@ -256,7 +315,28 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     }
 
     override fun onLongClick(product: Product) {
+        val adapter=ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice)
+        adapter.add("Eliminar")
+        adapter.add("Añadir fotos")
 
+        MaterialAlertDialogBuilder(this)
+            .setAdapter(adapter){dialogInterface:DialogInterface, position:Int->
+                when(position){
+                    0-> confirmDelete(product)
+                    1->{
+                        productSelected=product
+                        val intent=Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        intent.type = "image/*"
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                        galleryResult.launch(intent)
+                    }
+                }
+            }
+            .show()
+
+       
+    }
+    private fun confirmDelete(product:Product){
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.delete_dialog_title)
             .setMessage(R.string.delete_dialog_msg)
@@ -267,7 +347,7 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 product.id?.let{id->
                     product.imgUrl?.let{url->
                         val photoRef=FirebaseStorage.getInstance().getReferenceFromUrl(url)
-                            photoRef
+                        photoRef
                             //FirebaseStorage.getInstance().reference.child(Constants.PRODUCT_IMAGE).child(id)
                             .delete()
                             .addOnSuccessListener {
@@ -290,7 +370,6 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             .setNegativeButton(R.string.delete_dialog_cancel,null)
             .show()
 
-       
     }
 
     override fun getProductSelected(): Product? =productSelected

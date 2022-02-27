@@ -218,7 +218,9 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
             eventPost.sellerId=user.uid
             val imageRef=FirebaseStorage.getInstance().reference.child(user.uid)
                 .child(Constants.PRODUCT_IMAGE)
-            val photoRef=imageRef.child(eventPost.documentId!!)
+            //nos dará posibilidades de agregar más imágenes a un mismo producto
+
+            val photoRef=imageRef.child(eventPost.documentId!!).child("image0")
             if(photoSelectedUri == null){
                 eventPost.isSuccess=true
                 callback(eventPost)
@@ -233,7 +235,7 @@ class AddDialogFragment:DialogFragment(), DialogInterface.OnShowListener {
                         bitmap.compress(Bitmap.CompressFormat.JPEG,90, baos)
 
 
-                        val photoRef=imageRef.child(eventPost.documentId!!)
+                        //photoRef=imageRef.child(eventPost.documentId!!)
                         //en lugar de putFile
                         //photoRef.putFile(uri)
                         //le pasamos en byteArray
