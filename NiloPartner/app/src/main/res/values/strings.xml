@@ -54,6 +54,7 @@
     <string name="item_title_logout">Cerrar sesión</string>
     <string name="item_title_profile">Editar perfil</string>
     <string name="item_title_order">Historial de compras</string>
+    <string name="promo_fragment_title">Promociones</string>
 
 
 </resources>

@@ -28,6 +28,7 @@ import com.barryzea.niloclient.interfaces.OnProductListener
 import com.barryzea.niloclient.order.OrderActivity
 import com.barryzea.niloclient.pojo.Product
 import com.barryzea.niloclient.profile.ProfileFragment
+import com.barryzea.niloclient.promo.PromoFragment
 import com.barryzea.niloclient.settings.SettingsActivity
 import com.barryzea.niloclient.settings.SettingsFragment
 import com.firebase.ui.auth.AuthMethodPickerLayout
@@ -310,7 +311,12 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                 startActivity(Intent(this, SettingsActivity::class.java))
             }
             R.id.itemPromo->{
-
+                val fragment=PromoFragment()
+                supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.containerMain, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
         return super.onOptionsItemSelected(item)
