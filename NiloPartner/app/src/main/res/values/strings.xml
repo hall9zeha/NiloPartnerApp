@@ -51,6 +51,9 @@
     <string name="prefs_offers_title">Ofertas y promociones</string>
     <string name="settings">Configuración</string>
     <string name="topic_offers">topic_offers</string>
+    <string name="item_title_logout">Cerrar sesión</string>
+    <string name="item_title_profile">Editar perfil</string>
+    <string name="item_title_order">Historial de compras</string>
 
 
 </resources>

@@ -2,17 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/itemLogOut"
-        android:title="Cerrar sesión"
+        android:title="@string/item_title_logout"
         app:showAsAction="never"/>
     <item android:id="@+id/itemOrder"
-        android:title=""
-        app:showAsAction="ifRoom"
+        android:title="@string/item_title_order"
+        app:showAsAction="never"
         android:icon="@drawable/ic_history"/>
     <item android:id="@+id/itemProfile"
-        android:title="Editar perfil"
+        android:title="@string/item_title_profile"
        />
     <item android:id="@+id/itemSettings"
         android:title="@string/settings"
         app:showAsAction="never"
+        />
+    <item android:id="@+id/itemPromo"
+        android:title=""
+        app:showAsAction="always"
+        android:icon="@drawable/ic_offer"
         />
 </menu>

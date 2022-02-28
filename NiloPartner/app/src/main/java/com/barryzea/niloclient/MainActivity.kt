@@ -1,5 +1,6 @@
 package com.barryzea.niloclient
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -35,6 +36,8 @@ import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -131,9 +134,10 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
     }
 
     private fun configToolbar() {
-
+        setSupportActionBar(bind.toolbar)
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     private fun configRemoteConfig() {
         val remoteConfig=Firebase.remoteConfig
         val configSettings= remoteConfigSettings {
@@ -157,7 +161,11 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                     val percentage=remoteConfig.getDouble("percentage")
                     val photoUrl=remoteConfig.getString("photoUrl")
                     val message=remoteConfig.getString("message")
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    if(isPromoDay){
+                        val badge=BadgeDrawable.create(this)
+                        BadgeUtils.attachBadgeDrawable(badge,bind.toolbar,R.id.itemPromo)
+                        badge.number=promCounter.toInt()
+                    }
 
                 }
             }
@@ -300,6 +308,9 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
             }
             R.id.itemSettings->{
                 startActivity(Intent(this, SettingsActivity::class.java))
+            }
+            R.id.itemPromo->{
+
             }
         }
         return super.onOptionsItemSelected(item)

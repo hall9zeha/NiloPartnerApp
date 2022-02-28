@@ -15,5 +15,12 @@
     <style name="PreferencesTheme" parent="Theme.NiloClient">
         <item name="colorSecondary">@color/yellow_a400_dark</item>
     </style>
-
+    <!--solamente aplicaremos este estilo a la mainActivity en el manifest-->
+    <style name="Theme.NiloClient.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <!--y para mostrar correctamente la toolbar aplicada a mainActivity y el menu popup-->
+    <style name="Theme.NiloClient.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="Theme.NiloClient.AppPopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 </resources>
