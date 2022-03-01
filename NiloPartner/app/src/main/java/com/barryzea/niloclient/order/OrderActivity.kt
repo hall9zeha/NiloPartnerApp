@@ -35,25 +35,28 @@ class OrderActivity : AppCompatActivity(), OnOrderListener, OrderAux {
 
         setupRecyclerView()
         setupFirestore()
+
         checkIntent(intent)
     }
 
     private fun checkIntent(intent: Intent?) {
-        intent?.let{
-            val actionIntent=it.getIntExtra(Constants.ACTION_INTENT,0)
-            actionIntent?.let{
-                val id=intent.getStringExtra(Constants.PROP_ID)?:""
-                val status=intent.getIntExtra(Constants.STATUS, 0)
-                orderSelected= Order(id=id, status=status)
-                val fragment=TrackFragment()
+        intent?.let {
+            if (it.getStringExtra(Constants.ACTION_INTENT).isNullOrEmpty()) {
+                val actionIntent = it.getIntExtra(Constants.ACTION_INTENT, 0)
+                actionIntent?.let {
+                    val id = intent.getStringExtra(Constants.PROP_ID) ?: ""
+                    val status = intent.getIntExtra(Constants.STATUS, 0)
+                    orderSelected = Order(id = id, status = status)
+                    val fragment = TrackFragment()
 
-                supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.containerMainOrder, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                    supportFragmentManager
+                        .beginTransaction()
+                        .add(R.id.containerMainOrder, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+
             }
-
         }
     }
 

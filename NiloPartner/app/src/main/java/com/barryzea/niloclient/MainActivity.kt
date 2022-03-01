@@ -299,7 +299,10 @@ class MainActivity : AppCompatActivity(), OnProductListener, MainAux {
                         }
                     }
             }
-            R.id.itemOrder->{startActivity(Intent(this, OrderActivity::class.java))}
+            R.id.itemOrder->{
+
+                startActivity(Intent(this, OrderActivity::class.java)
+                    .putExtra(Constants.ACTION_INTENT,Constants.ORIGIN_INTENT))}
             R.id.itemProfile->{
                 val fragment=ProfileFragment()
                 supportFragmentManager.beginTransaction()

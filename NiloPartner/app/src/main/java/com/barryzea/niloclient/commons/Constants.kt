@@ -17,4 +17,5 @@ object Constants {
     const val MY_PHOTO="my_photo"
     const val ACTION_INTENT="action_intent"
     const val PROP_ID="id"
+    const val ORIGIN_INTENT="locale"
 }
