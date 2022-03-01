@@ -44,3 +44,14 @@ y presionando ```ctrl``` ```+``` ```enter```.
 
 También debera agregar su propio archivo ```google-services.json``` generado en la configuración de su proyecto de firebase, dentro de la aplicación en android studio.
 
+## Capturas Nilo Partner :framed_picture:
+<!--![alt text](https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113613~2.jpg?raw=true)-->
+<img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113736~2.jpg" alt="drawing" width="300"/>|
+<img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113748~2.jpg" alt="drawing" width="300"/>|
+<img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113813~2.jpg" alt="drawing" width="300"/>|
+<img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113831~2.jpg" alt="drawing" width="300"/>
+
+## Capturas Nilo Client :framed_picture:
+
+<img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113613~2.jpg" alt="drawing" width="300"/>|
+<img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113623~2.jpg" alt="drawing" width="300"/>
