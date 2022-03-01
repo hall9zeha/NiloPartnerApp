@@ -45,7 +45,7 @@ class FcmService: FirebaseMessagingService() {
         remoteMessage.notification?.let {
             //poniendo imagen de manera dinámica
             val imgUrl =
-                it.imageUrl//"https://cms-assets.tutsplus.com/uploads/users/798/posts/27376/preview_image/firebase@2x.png"
+                it.imageUrl
 
             if (imgUrl == null) {
                 sendNotification(it)
