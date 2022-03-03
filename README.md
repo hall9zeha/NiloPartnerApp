@@ -44,6 +44,12 @@ y presionando ```ctrl``` ```+``` ```enter```.
 
 También debera agregar su propio archivo ```google-services.json``` generado en la configuración de su proyecto de firebase, dentro de la aplicación en android studio.
 
+Para manejar las notificaciones desde un servidor externo pero usando el servicio de firebase cloud messaging, se ha proporcionado dos archivos PHP 
+* [NiloRS](https://github.com/hall9zeha/NiloPartnerApp/blob/main/Extras/NiloRS.php)
+* [Notification](https://github.com/hall9zeha/NiloPartnerApp/blob/main/Extras/Notification.php)
+ 
+Estos archivos pueden ser utilizados y modificados a conveniencia, y cargados al servidor que utilice. Solo se debe agregar la llave de su proyecto de firebase.
+
 ## Capturas Nilo Partner :framed_picture:
 <!--![alt text](https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113613~2.jpg?raw=true)-->
 <img src="https://github.com/hall9zeha/NiloPartnerApp/blob/main/Screenshots/Screenshot_20220301-113736~2.jpg" alt="drawing" width="300"/>|
