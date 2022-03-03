@@ -42,7 +42,7 @@ Aplicación de ventas orientada al vendedor/administrador y al  cliente,  desarr
 Para que la aplicación funcione correctamente al conectarla a su Cuenta de Firebase y activar la autenticación con google, debe proporcionar el código SHA-256 o SHA-1 generadas desde su IDE android studio indroduciendo en la terminal de Android Studio el comando: ```graddle signingReport```
 y presionando ```ctrl``` ```+``` ```enter```.
 
-También debera agregar su propio archivo ```google-services.json``` generado en la configuración de su proyecto de firebase, dentro de la aplicación en android studio.
+También deberá agregar su propio archivo ```google-services.json``` generado en la configuración de su proyecto de firebase, dentro de la aplicación en android studio.
 
 Para manejar las notificaciones desde un servidor externo pero usando el servicio de firebase cloud messaging, se ha proporcionado dos archivos PHP 
 * [NiloRS](https://github.com/hall9zeha/NiloPartnerApp/blob/main/Extras/NiloRS.php)
